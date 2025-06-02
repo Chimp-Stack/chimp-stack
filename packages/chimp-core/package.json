@@ -1,0 +1,17 @@
+{
+  "name": "chimp-core",
+  "version": "0.1.0",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --dts --out-dir dist"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "tsup": "^8.5.0",
+    "typescript": "^5.4.0"
+  }
+}
