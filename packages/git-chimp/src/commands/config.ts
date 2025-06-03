@@ -15,7 +15,7 @@ export async function handleConfig(cmd: {
   list?: boolean;
 }) {
   const config = await loadGitChimpConfig();
-
+  console.log({ config });
   if (cmd.list) {
     console.log(chalk.blueBright(JSON.stringify(config, null, 2)));
     process.exit(0);

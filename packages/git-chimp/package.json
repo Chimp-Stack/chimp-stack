@@ -18,6 +18,13 @@
     "git-chimp": "./dist/cli.js"
   },
   "main": "./dist/cli.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chimp-Stack/chimp-stack.git"
+  },
   "keywords": [],
   "author": "Mark Rabey <mark@markrabey.com> (http://markrabey.com/)",
   "license": "MIT",
@@ -25,6 +32,7 @@
   "dependencies": {
     "@octokit/rest": "^22.0.0",
     "chalk": "^5.4.1",
+    "chimp-core": "*",
     "commander": "^14.0.0",
     "dotenv": "^16.5.0",
     "inquirer": "^12.6.3",
