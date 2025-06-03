@@ -1,0 +1,45 @@
+{
+  "name": "git-chimp",
+  "version": "0.6.0",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "tsc",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
+    "pack": "npm pack",
+    "release": "npm run clean && npm run build && npm publish",
+    "release:patch": "npm version patch && git push && git push --tags && npm run release",
+    "release:minor": "npm version minor && git push && git push --tags && npm run release",
+    "release:major": "npm version major && git push && git push --tags && npm run release",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "bin": {
+    "git-chimp": "./dist/cli.js"
+  },
+  "main": "./dist/cli.js",
+  "keywords": [],
+  "author": "Mark Rabey <mark@markrabey.com> (http://markrabey.com/)",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "@octokit/rest": "^22.0.0",
+    "chalk": "^5.4.1",
+    "commander": "^14.0.0",
+    "dotenv": "^16.5.0",
+    "inquirer": "^12.6.3",
+    "openai": "^4.103.0",
+    "simple-git": "^3.27.0"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^12.0.1",
+    "@types/node": "^22.15.21",
+    "eslint": "^9.27.0",
+    "prettier": "^3.5.3",
+    "semantic-release": "^24.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
