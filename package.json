@@ -13,5 +13,8 @@
   },
   "devDependencies": {
     "turbo": "^1.13.0"
+  },
+  "dependencies": {
+    "@semantic-release/changelog": "^6.0.3"
   }
 }
