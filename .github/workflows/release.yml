@@ -1,0 +1,39 @@
+name: Release Monorepo Packages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    name: Release changed packages
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package:
+          - chimp-core
+          - commit-chimp
+          - doc-chimp
+    defaults:
+      run:
+        working-directory: packages/${{ matrix.package }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Configure npm auth
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+      - run: npm ci
+
+      - name: Run semantic-release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
