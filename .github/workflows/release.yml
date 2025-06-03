@@ -13,8 +13,8 @@ jobs:
       matrix:
         package:
           - chimp-core
-          - commit-chimp
-          - doc-chimp
+          # - git-chimp
+          # - doc-chimp
     defaults:
       run:
         working-directory: packages/${{ matrix.package }}
