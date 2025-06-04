@@ -30,7 +30,7 @@
   "dependencies": {
     "@octokit/rest": "^22.0.0",
     "chalk": "^5.4.1",
-    "chimp-core": "workspace:^0.1.0",
+    "chimp-core": "*",
     "commander": "^14.0.0",
     "dotenv": "^16.5.0",
     "inquirer": "^12.6.3",
