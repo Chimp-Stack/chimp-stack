@@ -36,7 +36,7 @@ jobs:
         run: npm ci
 
       - name: Build with Turbo (deps included)
-        run: npx turbo run build --filter=${{ matrix.package }}
+        run: npx turbo run build --filter=${{ matrix.package }} --since=origin/main
 
       - name: Ensure branch is up-to-date
         run: git pull origin main --ff-only
