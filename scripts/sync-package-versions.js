@@ -39,11 +39,14 @@ const packages = fs
     fs.existsSync(path.join(packagesDir, dir, 'package.json'))
   );
 
+let updatedPackages = [];
+
 // Update versions
 for (const pkg of packages) {
   const version = getLatestTag(pkg);
   if (version) {
     updatePackageVersion(pkg, version);
+    updatedPackages.push({ pkg, version });
   }
 }
 
