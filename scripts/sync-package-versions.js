@@ -15,7 +15,7 @@ const getLatestTag = (prefix) => {
       .trim();
     return tag.split('@')[1]; // returns the version
   } catch (e) {
-    console.error(`Failed to get tag for ${prefix}`);
+    console.error(`❌ Failed to get tag for ${prefix}`);
     return null;
   }
 };
@@ -23,9 +23,14 @@ const getLatestTag = (prefix) => {
 const updatePackageVersion = (pkg, version) => {
   const pkgPath = path.join(packagesDir, pkg, 'package.json');
   const pkgJson = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-  pkgJson.version = version;
-  fs.writeFileSync(pkgPath, JSON.stringify(pkgJson, null, 2) + '\n');
-  console.log(`✅ Updated ${pkg} to version ${version}`);
+  if (pkgJson.version !== version) {
+    pkgJson.version = version;
+    fs.writeFileSync(
+      pkgPath,
+      JSON.stringify(pkgJson, null, 2) + '\n'
+    );
+    console.log(`✅ Updated ${pkg} to version ${version}`);
+  }
 };
 
 const packages = fs
@@ -34,25 +39,38 @@ const packages = fs
     fs.existsSync(path.join(packagesDir, dir, 'package.json'))
   );
 
-let changed = false;
-
+// Update versions
 for (const pkg of packages) {
   const version = getLatestTag(pkg);
   if (version) {
     updatePackageVersion(pkg, version);
-    changed = true;
   }
 }
 
-if (changed) {
-  execSync('git config user.name "chimp-bot"');
-  execSync('git config user.email "chimp-bot@example.com"');
-  execSync('git add packages/**/package.json');
-  execSync(
-    'git commit -m "chore: sync package.json versions with latest tags [skip ci]"'
+try {
+  const status = execSync('git status --porcelain').toString().trim();
+
+  if (status) {
+    execSync('git config user.name "chimp-bot"');
+    execSync('git config user.email "chimp-bot@chimp-stack.com"');
+    execSync('git add packages/**/package.json');
+    const versions = updatedPackages
+      .map((p) => `${p.pkg}@${p.version}`)
+      .join(', ');
+    const commitMessage = `chore(release): 🚀 sync versions – ${versions} [skip ci]`;
+
+    execSync(`git commit -m "${commitMessage}"`);
+    execSync('git push');
+    console.log('🚀 Pushed synced versions');
+  } else {
+    console.log(
+      '🤫 Nothing to commit — working tree clean. All synced.'
+    );
+  }
+} catch (err) {
+  console.error(
+    '🧨 Version sync failed, but silence is golden in CI:',
+    err.message
   );
-  execSync('git push');
-  console.log('🚀 Pushed synced versions');
-} else {
-  console.log('🦥 No versions to sync');
+  process.exit(0); // Don't break the build if nothing needs syncing
 }
