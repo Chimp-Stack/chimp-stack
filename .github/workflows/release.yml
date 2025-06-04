@@ -20,10 +20,6 @@ jobs:
           - chimp-core
           - git-chimp
           # - doc-chimp
-    defaults:
-      run:
-        working-directory: packages/${{ matrix.package }}
-
     steps:
       - uses: actions/checkout@v4
 
@@ -35,10 +31,16 @@ jobs:
       - name: Configure npm auth
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
-      - run: npm ci
+      - name: Install dependencies from root
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+        working-directory: packages/${{ matrix.package }}
 
       - name: Run semantic-release
         run: npx semantic-release
+        working-directory: packages/${{ matrix.package }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
