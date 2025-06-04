@@ -1,6 +1,6 @@
 {
   "branches": ["main"],
-  "tagFormat": "${version}",
+  "tagFormat": "git-chimp${version}",
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
