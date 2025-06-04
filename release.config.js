@@ -1,15 +1,11 @@
 module.exports = {
   branches: ['main'],
+  tagFormat: '${npm_package_name}@${version}',
+  extends: 'semantic-release-monorepo',
   plugins: [
     ['@semantic-release/commit-analyzer'],
     ['@semantic-release/release-notes-generator'],
-    [
-      '@semantic-release/npm',
-      {
-        // Only relevant for published packages — helps avoid workspace errors
-        pkgRoot: '.',
-      },
-    ],
+    '@semantic-release/npm',
     [
       '@semantic-release/git',
       {
@@ -20,7 +16,5 @@ module.exports = {
     ],
     '@semantic-release/github',
   ],
-  tagFormat: '${pkg.name}@${version}',
-  extends: 'semantic-release-monorepo',
   changelogFile: 'CHANGELOG.md',
 };
