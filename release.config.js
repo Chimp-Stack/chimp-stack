@@ -1,6 +1,5 @@
 module.exports = {
   branches: ['main'],
-  tagFormat: '${npm_package_name}@${version}',
   extends: 'semantic-release-monorepo',
   plugins: [
     ['@semantic-release/commit-analyzer'],

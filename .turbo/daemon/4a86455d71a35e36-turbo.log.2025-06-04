@@ -17,3 +17,9 @@
 2025-06-04T17:23:56.664245Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("git-chimp"), path: AnchoredSystemPathBuf("packages/git-chimp") }}))
 2025-06-04T17:24:02.063302Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/chimp-core/release.config.js")}
 2025-06-04T17:24:02.063312Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("chimp-core"), path: AnchoredSystemPathBuf("packages/chimp-core") }}))
+2025-06-04T17:25:35.072962Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("release.config.js")}
+2025-06-04T17:25:35.073015Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-06-04T17:25:43.968185Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/git-chimp/release.config.js")}
+2025-06-04T17:25:43.968210Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("git-chimp"), path: AnchoredSystemPathBuf("packages/git-chimp") }}))
+2025-06-04T17:25:57.667753Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/chimp-core/release.config.js")}
+2025-06-04T17:25:57.667763Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("chimp-core"), path: AnchoredSystemPathBuf("packages/chimp-core") }}))
