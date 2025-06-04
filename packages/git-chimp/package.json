@@ -3,14 +3,9 @@
   "version": "0.6.0",
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "tsc",
+    "build": "tsup src/cli.ts --dts --format esm --out-dir dist",
     "prepare": "npm run build",
     "prepublishOnly": "npm run build",
-    "pack": "npm pack",
-    "release": "npm run clean && npm run build && npm publish",
-    "release:patch": "npm version patch && git push && git push --tags && npm run release",
-    "release:minor": "npm version minor && git push && git push --tags && npm run release",
-    "release:major": "npm version major && git push && git push --tags && npm run release",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",
@@ -18,6 +13,9 @@
     "git-chimp": "./dist/cli.js"
   },
   "main": "./dist/cli.js",
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -32,7 +30,7 @@
   "dependencies": {
     "@octokit/rest": "^22.0.0",
     "chalk": "^5.4.1",
-    "chimp-core": "*",
+    "chimp-core": "workspace:*",
     "commander": "^14.0.0",
     "dotenv": "^16.5.0",
     "inquirer": "^12.6.3",
@@ -43,11 +41,12 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/npm": "^12.0.1",
-    "@types/node": "^22.15.21",
+    "@types/node": "^22.15.29",
     "eslint": "^9.27.0",
     "prettier": "^3.5.3",
     "semantic-release": "^24.2.5",
     "ts-node": "^10.9.2",
+    "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   }
 }
