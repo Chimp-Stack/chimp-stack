@@ -4,8 +4,6 @@
   "scripts": {
     "clean": "rm -rf dist",
     "build": "tsup src/cli.ts --dts --format esm --out-dir dist",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",
