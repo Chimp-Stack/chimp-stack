@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/Chimp-Stack/chimp-stack/compare/chimp-core@1.0.1...chimp-core@1.0.2) (2025-06-04)
+
+
+### Bug Fixes
+
+* remove redudant builds ([491544b](https://github.com/Chimp-Stack/chimp-stack/commit/491544b4740d9796cd293b1e71ee6ce3c49995dc))
+
 # 1.0.0 (2025-06-04)
 
 
