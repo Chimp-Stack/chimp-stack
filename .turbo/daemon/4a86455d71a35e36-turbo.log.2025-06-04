@@ -11,3 +11,9 @@
 2025-06-04T17:14:19.406469Z  WARN turborepo_lib::package_changes_watcher: hashes are the same, no need to rerun
 2025-06-04T17:14:20.766503Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo/cookies/6.cookie"), AnchoredSystemPathBuf("packages/git-chimp/.turbo/turbo-build.log")}
 2025-06-04T17:14:20.766512Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("git-chimp"), path: AnchoredSystemPathBuf("packages/git-chimp") }, WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-06-04T17:23:54.064240Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/git-chimp/release.config.js")}
+2025-06-04T17:23:54.064340Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("git-chimp"), path: AnchoredSystemPathBuf("packages/git-chimp") }}))
+2025-06-04T17:23:56.664222Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/git-chimp/release.config.js")}
+2025-06-04T17:23:56.664245Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("git-chimp"), path: AnchoredSystemPathBuf("packages/git-chimp") }}))
+2025-06-04T17:24:02.063302Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/chimp-core/release.config.js")}
+2025-06-04T17:24:02.063312Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("chimp-core"), path: AnchoredSystemPathBuf("packages/chimp-core") }}))
