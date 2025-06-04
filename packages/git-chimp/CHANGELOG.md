@@ -1,3 +1,10 @@
+## [0.6.2](https://github.com/Chimp-Stack/chimp-stack/compare/git-chimp@0.6.1...git-chimp@0.6.2) (2025-06-04)
+
+
+### Bug Fixes
+
+* remove redudant builds ([491544b](https://github.com/Chimp-Stack/chimp-stack/commit/491544b4740d9796cd293b1e71ee6ce3c49995dc))
+
 ## [0.6.1](https://github.com/Chimp-Stack/chimp-stack/compare/git-chimp@0.6.0...git-chimp@0.6.1) (2025-06-04)
 
 
