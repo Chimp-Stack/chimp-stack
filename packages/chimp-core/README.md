@@ -2,6 +2,12 @@
 
 > Shared configuration and environment loader for the growing chimp toolchain.
 
+[![npm version](https://img.shields.io/npm/v/chimp-core)](https://www.npmjs.com/package/chimp-core)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://img.shields.io/github/actions/workflow/status/Chimp-Stack/chimp-stack/release.yml?label=release)](https://github.com/Chimp-Stack/chimp-stack/actions/workflows/release.yml)
+
+
+
 This package contains the core logic for reading `.chimprc` config files, loading environment variables, and handling shared behavior between tools like `git-chimp`, `doc-chimp`, and `review-chimp`.
 
 ## 📦 Installation

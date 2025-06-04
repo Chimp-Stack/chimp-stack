@@ -47,3 +47,11 @@
 2025-06-04T17:54:17.872145Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("git-chimp"), path: AnchoredSystemPathBuf("packages/git-chimp") }, WorkspacePackage { name: Other("chimp-core"), path: AnchoredSystemPathBuf("packages/chimp-core") }}))
 2025-06-04T17:59:52.465754Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/chimp-core/README.md")}
 2025-06-04T17:59:52.465815Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("chimp-core"), path: AnchoredSystemPathBuf("packages/chimp-core") }}))
+2025-06-04T18:03:30.268890Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/chimp-core/README.md")}
+2025-06-04T18:03:30.269487Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("chimp-core"), path: AnchoredSystemPathBuf("packages/chimp-core") }}))
+2025-06-04T18:13:45.696305Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/git-chimp/README.md")}
+2025-06-04T18:13:45.696336Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("git-chimp"), path: AnchoredSystemPathBuf("packages/git-chimp") }}))
+2025-06-04T18:14:31.195815Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/chimp-core/README.md")}
+2025-06-04T18:14:31.195839Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("chimp-core"), path: AnchoredSystemPathBuf("packages/chimp-core") }}))
+2025-06-04T18:16:25.695186Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/chimp-core/README.md")}
+2025-06-04T18:16:25.695263Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Other("chimp-core"), path: AnchoredSystemPathBuf("packages/chimp-core") }}))
