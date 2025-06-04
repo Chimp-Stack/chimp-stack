@@ -105,9 +105,12 @@ If used inside a Turborepo or other monorepo setup, make sure its `package.json`
 
 ## 🐒 Part of the Chimp Stack™
 
-* [`git-chimp`](https://github.com/MarkRabey/git-chimp) – commit & PR generator
-* [`doc-chimp`](https://github.com/MarkRabey/doc-chimp) – auto-documentation from commits and code (WIP)
+* [`git-chimp`](https://www.npmjs.com/package/git-chimp) – commit & PR generator  
+  [source](https://github.com/MarkRabey/chimp-stack/tree/main/packages/git-chimp)
+* [`doc-chimp`](https://www.npmjs.com/package/doc-chimp) – auto-documentation from commits and code (WIP)  
+  [source](https://github.com/MarkRabey/chimp-stack/tree/main/packages/doc-chimp)
 * `review-chimp` – coming soon: let the monkey do your code reviews
-* `chimp-core` – this package
+* `chimp-core` – this package  
+  [source](https://github.com/MarkRabey/chimp-stack/tree/main/packages/chimp-core)
 
-*“Because even the best engineers deserve a monkey on their shoulder.”*
+> *“Because even the best engineers deserve a monkey on their shoulder.”*
