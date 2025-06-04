@@ -1,0 +1,17 @@
+
+> git-chimp@0.6.2 build
+> tsup src/cli.ts --dts --format esm --out-dir dist
+
+[1G[0K[34mCLI[39m Building entry: src/cli.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.0
+[34mCLI[39m Using tsup config: /Users/markrabey/projects/chimp-stack/packages/git-chimp/tsup.config.ts
+[34mCLI[39m Target: node18
+[34mCLI[39m Cleaning output folder
+[34mESM[39m Build start
+[32mESM[39m [1mdist/cli.js [22m[32m20.58 KB[39m
+[32mESM[39m ⚡️ Build success in 9ms
+DTS Build start
+DTS ⚡️ Build success in 1193ms
+DTS dist/cli.d.ts 20.00 B
+[1G[0K⠙[1G[0K

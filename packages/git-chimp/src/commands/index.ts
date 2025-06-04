@@ -4,11 +4,8 @@ import { handlePR } from './pr.js';
 import { handleInit } from './init.js';
 import { handleConfig } from './config.js';
 import { handleChangelog } from './changelog.js';
-// Import JSON using createRequire for NodeNext compatibility
-import { createRequire } from 'node:module';
-const require = createRequire(import.meta.url);
-const { version } = require('../../package.json');
 
+const version = __VERSION__;
 const program = new Command();
 
 export function runCLI() {
