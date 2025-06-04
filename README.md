@@ -17,13 +17,17 @@ This monorepo is built using **Turborepo** and managed via **npm** workspaces. E
 | `doc-chimp`    | Auto-generates documentation from code & commits |
 | `review-chimp` | (Coming soon) AI-assisted code review comments   |
 
+### Package Releases
+- [`git-chimp`](https://github.com/Chimp-Stack/chimp-stack/releases?q=git-chimp)  
+- [`chimp-core`](https://github.com/Chimp-Stack/chimp-stack/releases?q=chimp-core)
+
 ---
 
 ## 🚀 Getting Started
 
 ```bash
 # Clone the repo
-git clone https://github.com/MarkRabey/chimp-stack.git
+git clone https://github.com/Chimp-Stack/chimp-stack.git
 cd chimp-stack
 
 # Install dependencies

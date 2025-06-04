@@ -1,3 +1,9 @@
 {
-  "tagFormat": "chimp-core@${version}"
+  "tagFormat": "chimp-core@${version}",
+  "plugins": [
+    ["@semantic-release/github", {
+      "releaseName": "chimp-core v${nextRelease.version}",
+      "message": "chore(release): 🚀 release git-chimp@${nextRelease.version} [skip ci]"
+    }]
+  ]
 }
