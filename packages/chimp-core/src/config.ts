@@ -14,7 +14,19 @@ export function loadChimpConfig(scope?: string): ChimpConfig {
   for (const loc of locations) {
     if (fs.existsSync(loc)) {
       const data = JSON.parse(fs.readFileSync(loc, 'utf-8'));
-      return scope ? (data[scope] ?? {}) : data;
+
+      if (scope) {
+        // Merge top-level keys into the scoped config
+        const { [scope]: scoped = {}, ...topLevel } = data;
+        const globalKeys = Object.fromEntries(
+          Object.entries(topLevel).filter(([k]) =>
+            ['openaiApiKey', 'githubToken'].includes(k)
+          )
+        );
+        return { ...globalKeys, ...scoped };
+      }
+
+      return data;
     }
   }
 

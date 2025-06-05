@@ -36,17 +36,17 @@ export async function handlePR(
     ...cliOptions,
   };
 
-  if (!process.env.GITHUB_TOKEN || !process.env.GITHUB_REPO) {
+  console.log({ config });
+
+  if (!config.githubToken) {
     console.error(
-      chalk.red(
-        '❌ Missing GITHUB_TOKEN or GITHUB_REPO in environment variables.'
-      )
+      chalk.red('❌ Missing GITHUB_TOKEN in environment variables.')
     );
     process.exit(1);
   }
 
   const git = simpleGit();
-  const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+  const octokit = new Octokit({ auth: config.githubToken });
 
   try {
     const currentBranch = (await git.branch()).current;
