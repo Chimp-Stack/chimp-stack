@@ -22,7 +22,14 @@ export function runCLI() {
 
   program
     .command('overview')
-    .description('Generate a summary of recent commits')
+    .description(
+      'Display a directory tree based on include/exclude patterns from your .chimprc'
+    )
+    .option('--pretty', 'Prettify output with colours')
+    .option(
+      '--include <globs...>',
+      'Override include globs from .chimprc'
+    )
     .action(handleOverview);
 
   program.parse(process.argv);

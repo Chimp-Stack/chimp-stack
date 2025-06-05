@@ -1,7 +1,8 @@
-import chalk from 'chalk';
+import { getChalk } from 'src/utils/getChalk';
 import { writeChimpConfig, loadChimpConfig } from '../config';
 
-export function listConfig(scope: string) {
+export async function listConfig(scope: string) {
+  const chalk = await getChalk();
   const config = loadChimpConfig(scope);
 
   if (Object.keys(config).length === 0) {
@@ -26,7 +27,8 @@ export function listConfig(scope: string) {
   process.exit(0);
 }
 
-export function getConfig(scope: string, key: string) {
+export async function getConfig(scope: string, key: string) {
+  const chalk = await getChalk();
   const config = loadChimpConfig(scope);
   const val = config[key];
 
@@ -52,7 +54,12 @@ export function getConfig(scope: string, key: string) {
   }
 }
 
-export function setConfig(scope: string, key: string, value: string) {
+export async function setConfig(
+  scope: string,
+  key: string,
+  value: string
+) {
+  const chalk = await getChalk();
   writeChimpConfig({ [key]: value }, { scope, location: 'global' });
   console.log(
     chalk.greenBright(
