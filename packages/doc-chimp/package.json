@@ -31,6 +31,7 @@
     "chimp-core": "*",
     "commander": "^14.0.0",
     "comment-parser": "^1.4.1",
+    "fast-glob": "^3.3.3",
     "globby": "^14.1.0",
     "simple-git": "^3.27.0",
     "ts-node": "^10.9.2",
