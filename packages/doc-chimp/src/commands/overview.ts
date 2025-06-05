@@ -3,32 +3,92 @@ import fg from 'fast-glob';
 import path from 'node:path';
 import chalk from 'chalk';
 
+type FileTree = {
+  [key: string]: FileTree | null;
+};
+
+function insertIntoTree(tree: FileTree, parts: string[]) {
+  const [head, ...rest] = parts;
+  if (!head) return;
+
+  if (rest.length === 0) {
+    tree[head] = null;
+  } else {
+    if (!tree[head] || tree[head] === null) {
+      tree[head] = {};
+    }
+    insertIntoTree(tree[head] as FileTree, rest);
+  }
+}
+
+function printTree(
+  tree: FileTree,
+  depth = 0,
+  pretty = false,
+  parentIsLast = true
+) {
+  const indent = '  '.repeat(depth);
+  const entries = Object.entries(tree).sort(([a], [b]) =>
+    a.localeCompare(b)
+  );
+  const lastIndex = entries.length - 1;
+
+  entries.forEach(([name, subtree], i) => {
+    const isLast = i === lastIndex;
+    const prefix =
+      depth === 0 ? '' : `${indent}${isLast ? '└─' : '├─'}`;
+    const label = subtree ? `${name}/` : name;
+
+    if (pretty) {
+      const colored =
+        subtree === null
+          ? chalk.green(label)
+          : chalk.blue.bold(label);
+      console.log(`${prefix} ${colored}`);
+    } else {
+      console.log(`${prefix} ${label}`);
+    }
+
+    if (subtree) {
+      printTree(subtree, depth + 1, pretty, isLast);
+    }
+  });
+}
+
 export async function handleOverview({
   pretty,
+  include: cliInclude,
 }: {
   pretty?: boolean;
+  include?: string[];
 }) {
   const config = loadChimpConfig('docChimp') as DocChimpConfig;
-  const { include, exclude, outputDir } = config;
+
+  function expandIncludePatterns(patterns: string[]): string[] {
+    return patterns.flatMap((p) =>
+      p.endsWith('/') || !p.includes('*')
+        ? [p, path.join(p, '**', '*')]
+        : [p]
+    );
+  }
+
+  const include = expandIncludePatterns(
+    cliInclude?.length ? cliInclude : config.include
+  );
+  const exclude = config.exclude;
 
   const files = await fg(include, {
     ignore: exclude,
     onlyFiles: true,
     cwd: process.cwd(),
-    absolute: true,
+    absolute: false,
   });
 
-  const tree: Record<string, string[]> = {};
+  const tree: FileTree = {};
 
-  for (const file of files) {
-    const relPath = path.relative(process.cwd(), file);
-    const dir = path.dirname(relPath);
-
-    if (!tree[dir]) {
-      tree[dir] = [];
-    }
-
-    tree[dir].push(path.basename(relPath));
+  for (const relPath of files) {
+    const parts = relPath.split(path.sep);
+    insertIntoTree(tree, parts);
   }
 
   if (pretty) {
@@ -37,31 +97,5 @@ export async function handleOverview({
     console.log('\n📁 Project Structure Overview:\n');
   }
 
-  const printTree = (dir: string, depth = 0) => {
-    const indent = '  '.repeat(depth);
-    const label = dir || '.';
-
-    if (pretty) {
-      console.log(`${indent}${chalk.blue.bold(label + '/')}`);
-    } else {
-      console.log(`${indent}${label}/`);
-    }
-
-    const children = (tree[dir] || []).sort();
-
-    for (const child of children) {
-      const childText = `${indent}  └── ${child}`;
-      console.log(pretty ? chalk.green(childText) : childText);
-    }
-
-    const subdirs = Object.keys(tree)
-      .filter((d) => path.dirname(d) === dir && d !== dir)
-      .sort();
-
-    for (const sub of subdirs) {
-      printTree(sub, depth + 1);
-    }
-  };
-
-  printTree('');
+  printTree(tree, 0, pretty);
 }
