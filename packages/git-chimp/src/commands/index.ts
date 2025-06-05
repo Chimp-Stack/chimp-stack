@@ -2,8 +2,8 @@ import { Command } from 'commander';
 import { handleCommitCommand } from './commit.js';
 import { handlePR } from './pr.js';
 import { handleInit } from './init.js';
-import { handleConfig } from './config.js';
 import { handleChangelog } from './changelog.js';
+import { addChimpConfigCommand } from 'chimp-core';
 
 const version = __VERSION__;
 const program = new Command();
@@ -16,21 +16,12 @@ export function runCLI() {
     )
     .version(version);
 
+  addChimpConfigCommand(program, 'gitChimp');
+
   program
     .command('init')
     .description('Set up your OpenAI and GitHub tokens')
     .action(handleInit);
-
-  program
-    .command('config')
-    .description(
-      'Get/set git-chimp configuration in .chimprc (JSON format)'
-    )
-    .option('-l, --list', 'List current config')
-    .option('-g, --get <key>', 'Get value by key')
-    .option('-s, --set <key>', 'Set value')
-    .option('-v, --value <val>', 'Value when used with --set')
-    .action(handleConfig);
 
   program
     .command('commit')

@@ -2,8 +2,8 @@ import { simpleGit } from 'simple-git';
 import chalk from 'chalk';
 import fs from 'fs';
 import type { DefaultLogFields, ListLogLine } from 'simple-git';
-import { loadGitChimpConfig } from '../utils/config.js';
 import { generateChangelogEntries } from '../lib/openai.js'; // New helper
+import { GitChimpConfig, loadChimpConfig } from 'chimp-core';
 
 export async function handleChangelog(
   options: {
@@ -13,7 +13,7 @@ export async function handleChangelog(
     ai?: boolean;
   } = {}
 ) {
-  const config = await loadGitChimpConfig();
+  const config = loadChimpConfig('gitChimp') as GitChimpConfig;
   const git = simpleGit();
 
   const from = options.from || (await git.tags()).latest;

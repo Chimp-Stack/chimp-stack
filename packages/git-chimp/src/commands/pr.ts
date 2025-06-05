@@ -6,11 +6,8 @@ import {
   generatePullRequestTitle,
 } from '../lib/openai.js';
 import readline from 'readline';
-import {
-  GitChimpConfig,
-  loadGitChimpConfig,
-  validatePrTitle,
-} from '../utils/config.js';
+import { validatePrTitle } from '../utils/git.js';
+import { GitChimpConfig, loadChimpConfig } from 'chimp-core';
 
 function askUser(question: string): Promise<string> {
   const rl = readline.createInterface({
@@ -33,7 +30,7 @@ export async function handlePR(
 ) {
   const shouldAutoUpdate = !!cliOptions?.update;
 
-  const fileConfig = await loadGitChimpConfig(); // from .git-chimprc
+  const fileConfig = loadChimpConfig('gitChimp') as GitChimpConfig;
   const config: GitChimpConfig = {
     ...fileConfig,
     ...cliOptions,
