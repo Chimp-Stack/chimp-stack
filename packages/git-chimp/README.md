@@ -36,22 +36,23 @@ npx git-chimp commit
 
 ---
 
-## 🔧 Configuration
+## 🧠 Initialize Your Config with `init`
 
-Run this once to get set up:
+You can quickly create or update your `.chimprc` file using the built-in init command:
 
 ```bash
-git-chimp init
+npx git-chimp init
 ```
 
-This creates a .env file with:
+You'll be prompted to choose:
 
-```env
-OPENAI_API_KEY=your-openai-key
-GITHUB_TOKEN=your-github-token
-# Optional – will be auto-detected from .git if omitted
-GITHUB_REPO=username/repo
-```
+- Local or Global config location
+- Local: stored in `./.chimprc`
+- Global: stored in `~/.chimprc`
+
+Then you'll be walked through a few simple questions to generate the correct config for your project or environment. If a config already exists, it will be merged with your new choices — no overwrites or data loss.
+
+Some fields (like `openaiApiKey`) are only written to global config for security and reusability.
 
 ### Get your API keys:
 

@@ -44,15 +44,23 @@ npx doc-chimp overview
 
 ---
 
-## 🔧 Configuration
+## 🧠 Initialize Your Config with `init`
 
-Run this once to set up:
+You can quickly create or update your `.chimprc` file using the built-in init command:
 
 ```bash
-doc-chimp init
+npx doc-chimp init
 ```
 
-That creates a `.chimprc` file at the root of your repo, if one doesn’t exist.
+You'll be prompted to choose:
+
+- Local or Global config location
+- Local: stored in `./.chimprc`
+- Global: stored in `~/.chimprc`
+
+Then you'll be walked through a few simple questions to generate the correct config for your project or environment. If a config already exists, it will be merged with your new choices — no overwrites or data loss.
+
+Some fields (like `openaiApiKey`) are only written to global config for security and reusability.
 
 ### Example `.chimprc`
 
