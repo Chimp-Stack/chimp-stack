@@ -7,7 +7,7 @@ type FileTree = {
   [key: string]: FileTree | null;
 };
 
-function insertIntoTree(tree: FileTree, parts: string[]) {
+export function insertIntoTree(tree: FileTree, parts: string[]) {
   const [head, ...rest] = parts;
   if (!head) return;
 
