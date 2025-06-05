@@ -1,6 +1,9 @@
 import { Command } from 'commander';
 import { handleOverview } from './overview.js';
-import { addChimpConfigCommand } from 'chimp-core';
+import {
+  addChimpConfigCommand,
+  addChimpInitCommand,
+} from 'chimp-core';
 
 const version = __VERSION__;
 
@@ -14,6 +17,7 @@ export function runCLI() {
     )
     .version(version);
 
+  addChimpInitCommand(program, 'docChimp');
   addChimpConfigCommand(program, 'docChimp');
 
   program

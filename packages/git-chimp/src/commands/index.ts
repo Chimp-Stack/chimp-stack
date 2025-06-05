@@ -1,9 +1,11 @@
 import { Command } from 'commander';
 import { handleCommitCommand } from './commit.js';
 import { handlePR } from './pr.js';
-import { handleInit } from './init.js';
 import { handleChangelog } from './changelog.js';
-import { addChimpConfigCommand } from 'chimp-core';
+import {
+  addChimpConfigCommand,
+  addChimpInitCommand,
+} from 'chimp-core';
 
 const version = __VERSION__;
 const program = new Command();
@@ -16,12 +18,8 @@ export function runCLI() {
     )
     .version(version);
 
+  addChimpInitCommand(program, 'gitChimp');
   addChimpConfigCommand(program, 'gitChimp');
-
-  program
-    .command('init')
-    .description('Set up your OpenAI and GitHub tokens')
-    .action(handleInit);
 
   program
     .command('commit')
