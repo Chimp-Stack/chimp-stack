@@ -241,7 +241,7 @@ Here’s what’s cooking in the banana lab:
 - ~~🎭 `--tone` option for different writing styles: _e.g., “corporate-safe”, “dry sarcasm”, “inspired by Linus Torvalds”_~~ ✅ *Done*
 - ~~📓 `git-chimp changelog` – auto-generate changelogs from commits~~ ✅ *Done*
 - 🍿 Emoji support and Conventional Commit modes
-- ⚙️ `.chimprc` file for personal and team-level preferences - currently per-project. Updates will allow for options like `~/.chimprc`
+- ~~⚙️ `.chimprc` file for personal and team-level preferences - currently per-project. Updates will allow for options like `~/.chimprc`~~ ✅ *Done*
 - 🔀 Branch naming assistant (`git-chimp name` or `git-chimp branch`)
 - 🧪 Dry run support (`--dry-run`)
 
