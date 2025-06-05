@@ -20,3 +20,12 @@ export type GitChimpConfig = ChimpConfig & {
     groupOrder?: string[];
   };
 };
+
+export type DocChimpConfig = ChimpConfig & {
+  include: string[];
+  exclude: string[];
+  outputDir: string;
+  changelog: boolean;
+  prSummary: boolean;
+  toc: boolean;
+};

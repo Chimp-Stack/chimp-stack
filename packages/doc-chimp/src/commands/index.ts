@@ -1,6 +1,6 @@
 import { Command } from 'commander';
-import { handleConfig } from './config.js';
 import { handleOverview } from './overview.js';
+import { addChimpConfigCommand } from 'chimp-core';
 
 const version = __VERSION__;
 
@@ -14,17 +14,7 @@ export function runCLI() {
     )
     .version(version);
 
-  program
-    .command('config')
-    .description(
-      'Get/set git-chimp configuration in .chimprc (JSON format)'
-    )
-
-    .option('-l, --list', 'List current config')
-    .option('-g, --get <key>', 'Get value by key')
-    .option('-s, --set <key>', 'Set value')
-    .option('-v, --value <val>', 'Value when used with --set')
-    .action(handleConfig);
+  addChimpConfigCommand(program, 'docChimp');
 
   program
     .command('overview')
