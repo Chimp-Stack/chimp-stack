@@ -36,8 +36,6 @@ export async function handlePR(
     ...cliOptions,
   };
 
-  console.log({ config });
-
   if (!config.githubToken) {
     console.error(
       chalk.red('❌ Missing GITHUB_TOKEN in environment variables.')
