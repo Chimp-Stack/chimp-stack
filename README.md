@@ -18,7 +18,8 @@ This monorepo is built using **Turborepo** and managed via **npm** workspaces. E
 | `review-chimp` | (Coming soon) AI-assisted code review comments   |
 
 ### Package Releases
-- [`git-chimp`](https://github.com/Chimp-Stack/chimp-stack/releases?q=git-chimp)  
+- [`git-chimp`](https://github.com/Chimp-Stack/chimp-stack/releases?q=git-chimp)
+- [`doc-chimp`](https://github.com/Chimp-Stack/chimp-stack/releases?q=doc-chimp)
 - [`chimp-core`](https://github.com/Chimp-Stack/chimp-stack/releases?q=chimp-core)
 
 ---
