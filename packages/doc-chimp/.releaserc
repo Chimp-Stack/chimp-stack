@@ -1,14 +1,9 @@
 {
-  "branches": ["main"],
-  "tagFormat": "v${version}",
+  "tagFormat": "doc-chimp@${version}",
   "plugins": [
-    "@semantic-release/commit-analyzer",
-    "@semantic-release/release-notes-generator",
-    "@semantic-release/npm",
-    "@semantic-release/github"
-  ],
-  "preset": "conventionalcommits",
-  "release": {
-    "prerelease": false
-  }
+    ["@semantic-release/github", {
+      "releaseName": "doc-chimp v${nextRelease.version}",
+      "message": "chore(release): 🚀 release doc-chimp@${nextRelease.version} [skip ci]"
+    }]
+  ]
 }

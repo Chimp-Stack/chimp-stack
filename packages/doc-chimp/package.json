@@ -6,17 +6,18 @@
     "doc-chimp": "./dist/cli.js"
   },
   "main": "./dist/cli.js",
+  "files": ["dist"],
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chimp-Stack/chimp-stack.git"
+  },
   "scripts": {
     "clean": "rm -rf dist",
     "build": "tsc",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run build",
-    "pack": "npm pack",
-    "release": "npm run clean && npm run build && npm publish",
-    "release:patch": "npm version patch && git push && git push --tags && npm run release",
-    "release:minor": "npm version minor && git push && git push --tags && npm run release",
-    "release:major": "npm version major && git push && git push --tags && npm run release",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
   },
   "keywords": [],
@@ -25,6 +26,7 @@
   "dependencies": {
     "@types/node": "^22.15.29",
     "chalk": "^5.4.1",
+    "chimp-core": "*",
     "commander": "^14.0.0",
     "comment-parser": "^1.4.1",
     "globby": "^14.1.0",

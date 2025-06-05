@@ -1,3 +1,4 @@
+import { loadChimpConfig } from 'chimp-core';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -15,12 +16,8 @@ export type DocChimpConfigValue<K extends DocChimpConfigKey> =
   DocChimpConfig[K];
 
 export async function loadDocChimpConfig(): Promise<DocChimpConfig> {
-  const chimpRcPath = path.resolve('.chimprc');
-
-  const file = await fs.readFile(chimpRcPath, 'utf8');
-  const json = JSON.parse(file);
-
-  return json?.docChimp || {};
+  const chimpConfig = loadChimpConfig();
+  return chimpConfig.docChimp || {};
 }
 
 export async function saveDocChimpConfig(newConfig: DocChimpConfig) {

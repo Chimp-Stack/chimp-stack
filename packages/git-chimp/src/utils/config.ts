@@ -28,36 +28,6 @@ export async function loadGitChimpConfig(): Promise<GitChimpConfig> {
   return chimpConfig.gitChimp || {};
 }
 
-// export async function loadGitChimpConfig(): Promise<GitChimpConfig> {
-//   const chimpRcPath = path.resolve('.chimprc');
-//   const gitChimpRcPath = path.resolve('.git-chimprc');
-
-//   // Try .chimprc first (namespaced)
-//   try {
-//     const file = await fs.readFile(chimpRcPath, 'utf8');
-//     const json = JSON.parse(file);
-//     if (json?.gitChimp) return json.gitChimp as GitChimpConfig;
-//   } catch {
-//     /* ignore */
-//   }
-
-//   // Then try .git-chimprc (flat structure)
-//   try {
-//     const file = await fs.readFile(gitChimpRcPath, 'utf8');
-//     const json = JSON.parse(file);
-//     console.warn(
-//       chalk.yellow(
-//         '⚠️  .git-chimprc is deprecated. Please migrate your config to `.chimprc` under the `gitChimp` namespace.'
-//       )
-//     );
-//     return json as GitChimpConfig;
-//   } catch {
-//     /* ignore */
-//   }
-
-//   return {};
-// }
-
 export async function saveGitChimpConfig(newConfig: GitChimpConfig) {
   const chimpRcPath = path.resolve('.chimprc');
 
