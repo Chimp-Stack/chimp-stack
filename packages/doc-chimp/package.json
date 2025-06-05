@@ -6,7 +6,9 @@
     "doc-chimp": "./dist/cli.js"
   },
   "main": "./dist/cli.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -17,7 +19,7 @@
   },
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "tsc",
+    "build": "tsup src/cli.ts --dts --format esm --out-dir dist",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
   },
   "keywords": [],
@@ -35,13 +37,10 @@
     "typescript": "^5.8.3"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/npm": "^12.0.1",
     "@types/jest": "^29.5.14",
     "conventional-changelog-conventionalcommits": "^9.0.0",
     "jest": "^29.7.0",
-    "semantic-release": "^24.2.5",
-    "ts-jest": "^29.3.4"
+    "ts-jest": "^29.3.4",
+    "tsup": "^8.5.0"
   }
 }

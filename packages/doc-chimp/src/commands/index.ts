@@ -1,11 +1,8 @@
 import { Command } from 'commander';
-
-// Import JSON using createRequire for NodeNext compatibility
-import { createRequire } from 'node:module';
 import { handleConfig } from './config.js';
 import { handleOverview } from './overview.js';
-const require = createRequire(import.meta.url);
-const { version } = require('../../package.json');
+
+const version = __VERSION__;
 
 const program = new Command();
 
