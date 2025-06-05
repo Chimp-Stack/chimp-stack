@@ -1,15 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
-
-export interface ChimpConfig {
-  openaiApiKey?: string;
-  [key: string]: any;
-}
+import { ChimpConfig } from './types/config';
 
 const CONFIG_FILENAME = '.chimprc';
 
-export function loadChimpConfig(): ChimpConfig {
+export function loadChimpConfig(scope?: string): ChimpConfig {
   const locations = [
     path.join(process.cwd(), CONFIG_FILENAME),
     path.join(os.homedir(), CONFIG_FILENAME),
@@ -17,8 +13,8 @@ export function loadChimpConfig(): ChimpConfig {
 
   for (const loc of locations) {
     if (fs.existsSync(loc)) {
-      const data = fs.readFileSync(loc, 'utf-8');
-      return JSON.parse(data);
+      const data = JSON.parse(fs.readFileSync(loc, 'utf-8'));
+      return scope ? (data[scope] ?? {}) : data;
     }
   }
 
@@ -26,12 +22,22 @@ export function loadChimpConfig(): ChimpConfig {
 }
 
 export function writeChimpConfig(
-  config: ChimpConfig,
-  location: 'global' | 'local' = 'local'
+  newConfig: ChimpConfig,
+  options: { location?: 'global' | 'local'; scope?: string } = {}
 ) {
+  const { location = 'local', scope } = options;
   const target =
     location === 'global'
       ? path.join(os.homedir(), CONFIG_FILENAME)
       : path.join(process.cwd(), CONFIG_FILENAME);
-  fs.writeFileSync(target, JSON.stringify(config, null, 2));
+
+  const existing = fs.existsSync(target)
+    ? JSON.parse(fs.readFileSync(target, 'utf-8'))
+    : {};
+
+  const updated = scope
+    ? { ...existing, [scope]: { ...existing[scope], ...newConfig } }
+    : { ...existing, ...newConfig };
+
+  fs.writeFileSync(target, JSON.stringify(updated, null, 2));
 }
