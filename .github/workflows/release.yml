@@ -19,7 +19,7 @@ jobs:
         package:
           - chimp-core
           - git-chimp
-          # - doc-chimp
+          - doc-chimp
 
     steps:
       - uses: actions/checkout@v4
