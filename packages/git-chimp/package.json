@@ -1,6 +1,6 @@
 {
   "name": "git-chimp",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "scripts": {
     "clean": "rm -rf dist",
     "build": "tsup src/cli.ts --dts --format esm --out-dir dist",
