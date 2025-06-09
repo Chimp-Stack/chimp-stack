@@ -107,6 +107,12 @@ export function addChimpInitCommand(
             default: 'docs',
           },
           {
+            type: 'input',
+            name: 'format',
+            message: 'Output format for generated docs',
+            default: 'markdown',
+          },
+          {
             type: 'confirm',
             name: 'changelog',
             message: 'Include changelog content?',
