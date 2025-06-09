@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "semantic-release-monorepo",
-    "semantic-release"
-  ],
+  "extends": "semantic-release-monorepo",
   "monorepoPath": "packages/chimp-core",
   "tagFormat": "@chimp-stack/core@${version}",
   "initialReleaseVersion": "1.6.0",
@@ -23,7 +20,7 @@
     [
       "@semantic-release/github",
       {
-        "releaseName": "chimp-core v${nextRelease.version}",
+        "releaseName": "@chimp-stack/core v${nextRelease.version}",
         "message": "chore(release): 🚀 release @chimp-stack/core@${nextRelease.version} [skip ci]"
       }
     ]

@@ -12,7 +12,7 @@ This monorepo is built using **Turborepo** and managed via **npm** workspaces. E
 
 | Package        | Description                                      |
 | -------------- | ------------------------------------------------ |
-| `chimp-core`   | Shared config/env loader used by all tools       |
+| `core`   | Shared config/env loader used by all tools       |
 | `git-chimp`    | Commit message + PR body generator               |
 | `doc-chimp`    | Auto-generates documentation from code & commits |
 | `review-chimp` | (Coming soon) AI-assisted code review comments   |
