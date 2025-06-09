@@ -1,8 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+export interface FileNode {
+  undocumented: boolean;
+  changelog?: string;
+}
+
 export type FileTree = {
-  [key: string]: FileTree | null | { undocumented: boolean };
+  [key: string]: FileTree | FileNode;
 };
 
 export function writeOutputFile(filePath: string, content: string) {

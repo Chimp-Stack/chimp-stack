@@ -16,17 +16,17 @@
 
 ## 🧠 Features
 
-* 🔍 `doc-chimp overview` – Lists files and exports in your project for a bird’s-eye view
-* ⚙️ `doc-chimp config` – Read and write `.chimprc` values with ease
-* 📂 Supports per-package config in monorepos
-* 🧪 No AI integration (yet) – but we're working on it!
+- 🔍 `doc-chimp overview` – Lists files and exports in your project for a bird’s-eye view
+- ⚙️ `doc-chimp config` – Read and write `.chimprc` values with ease
+- 📂 Supports per-package config in monorepos
+- 🧪 No AI integration (yet) – but the monkeys are learning fast!
 
-Coming soon:
+### Coming Soon
 
-* 🤖 AI-generated inline documentation for TypeScript
-* 📝 AI-generated READMEs and usage examples
-* 📖 HTML docs generation from code + config
-* 🧠 Integration with `git-chimp` changelogs for smarter release notes
+- 🧠 AI-generated inline docs (TypeScript docstrings on monkey steroids)
+- 📚 Static HTML documentation built from your code and `.chimprc` config
+- 📘 Smarter READMEs and usage examples with AI help
+- 🔗 Cross-linked changelogs with 1 for rich release notes - *early support already available in `overview`*
 
 ---
 
@@ -84,6 +84,7 @@ Some fields (like `openaiApiKey`) are only written to global config for security
     ],
     "format": "markdown",
     "outputDir": "docs",
+    "changelog": true
   }
 }
 ```
@@ -145,6 +146,8 @@ Lists:
 |                        | - If path is a filename with extension, uses it as-is                                        |
 |                        | - If relative filename given, does NOT prepend output directory                              |
 | `--undocumented`       | Only include files lacking top-level documentation                                           |
+| `--show-changelog`     | Include the latest changelog entry for each file (requires changelog support in `.chimprc`)  |
+                                       |
 
 
 ### Example
@@ -152,18 +155,8 @@ Lists:
 doc-chimp overview --pretty --include src/ packages/utils/ --output docs/
 doc-chimp overview --output project-structure.md
 doc-chimp overview --output ./custom-output.json --format json
+doc-chimp overview --show-changelog --pretty
 ```
-
----
-
-## 🚧 Roadmap
-
-Features on the way:
-
-* 🧠 AI-generated inline docs based on your code (like docstrings on monkey steroids)
-* 📚 Render static HTML documentation from `.chimprc` config
-* 📘 Smarter README and usage examples using GPT
-* 🔗 Cross-linking with changelogs from `git-chimp`
 
 ---
 

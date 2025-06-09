@@ -44,6 +44,10 @@ export function runCLI() {
       '--undocumented',
       'Only include files lacking documentation'
     )
+    .option(
+      '--show-changelog',
+      'Include latest changelog entry for each file'
+    )
     .action(handleOverview);
 
   program.parse(process.argv);

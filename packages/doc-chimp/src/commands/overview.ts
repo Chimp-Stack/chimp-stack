@@ -1,15 +1,16 @@
+import { execSync } from 'node:child_process';
 import { DocChimpConfig, loadChimpConfig } from 'chimp-core';
 import fg from 'fast-glob';
 import path from 'node:path';
 import chalk from 'chalk';
 import { FileTree, writeOutputFile } from '../utils/file.js';
-import { generateMarkdownFromTree } from '../generator/markdown.js';
 import { isUndocumented } from '../utils/isUndocumented.js';
 
 export function insertIntoTree(
   tree: FileTree,
   parts: string[],
-  isUndocumented: boolean
+  isUndocumented: boolean,
+  changelog?: string
 ) {
   const [head, ...rest] = parts;
   if (!head) return;
@@ -17,6 +18,7 @@ export function insertIntoTree(
   if (rest.length === 0) {
     tree[head] = {
       undocumented: isUndocumented,
+      changelog,
     };
   } else {
     if (
@@ -26,7 +28,12 @@ export function insertIntoTree(
     ) {
       tree[head] = {};
     }
-    insertIntoTree(tree[head] as FileTree, rest, isUndocumented);
+    insertIntoTree(
+      tree[head] as FileTree,
+      rest,
+      isUndocumented,
+      changelog
+    );
   }
 }
 
@@ -77,18 +84,32 @@ function printTree(
   });
 }
 
+function getLastCommitForFile(filePath: string): string | null {
+  try {
+    const result = execSync(
+      `git log -1 --pretty=format:%h\\ %s -- "${filePath}"`,
+      { encoding: 'utf-8' }
+    );
+    return result.trim();
+  } catch {
+    return null; // no commits or git not available
+  }
+}
+
 export async function handleOverview({
   pretty,
   undocumented,
   include: cliInclude,
   output,
   format: cliFormat,
+  showChangelog, // new flag here, boolean
 }: {
   pretty?: boolean;
   undocumented?: boolean;
   include?: string[];
-  output?: string;
+  output?: string | boolean;
   format?: string;
+  showChangelog?: boolean; // add this
 }) {
   const config = loadChimpConfig('docChimp') as DocChimpConfig;
 
@@ -103,7 +124,11 @@ export async function handleOverview({
   const include = expandIncludePatterns(
     cliInclude?.length ? cliInclude : config.include
   );
+
   const exclude = config.exclude;
+
+  const enableChangelog =
+    showChangelog !== undefined ? showChangelog : !!config.changelog;
 
   const files = await fg(include, {
     ignore: exclude,
@@ -120,57 +145,162 @@ export async function handleOverview({
 
     let isUndoc = false;
     if (undocumented) {
-      isUndoc = isUndocumented(absPath); // absolute path for isUndocumented check
+      isUndoc = isUndocumented(absPath);
     }
 
-    insertIntoTree(tree, parts, isUndoc);
+    let changelogEntry: string | undefined;
+    if (enableChangelog) {
+      const commit = getLastCommitForFile(relPath);
+      if (commit) {
+        changelogEntry = commit;
+      }
+    }
+
+    insertIntoTree(tree, parts, isUndoc, changelogEntry);
   }
 
-  // Always print tree to console for interactive use
+  // Print the tree with changelog info
+  function printTreeWithChangelog(
+    tree: FileTree,
+    depth = 0,
+    pretty = false,
+    parentIsLast = true
+  ) {
+    const indent = '  '.repeat(depth);
+    const entries = Object.entries(tree).sort(([a], [b]) =>
+      a.localeCompare(b)
+    );
+    const lastIndex = entries.length - 1;
+
+    entries.forEach(([name, subtree], i) => {
+      const isLast = i === lastIndex;
+      const prefix =
+        depth === 0 ? '' : `${indent}${isLast ? '└─' : '├─'}`;
+
+      let label = name;
+      if (
+        subtree &&
+        'undocumented' in subtree &&
+        subtree.undocumented
+      ) {
+        label += ' ⚠️';
+      }
+
+      if (pretty) {
+        const colored =
+          !subtree ||
+          ('undocumented' in subtree && !subtree.undocumented)
+            ? chalk.green(label)
+            : chalk.red(label);
+        process.stdout.write(`${prefix} ${colored}`);
+      } else {
+        process.stdout.write(`${prefix} ${label}`);
+      }
+
+      // Show changelog inline, slightly indented
+      if (
+        subtree &&
+        typeof subtree === 'object' &&
+        'changelog' in subtree &&
+        subtree.changelog
+      ) {
+        process.stdout.write(
+          pretty
+            ? chalk.gray(`  ← ${subtree.changelog}`)
+            : `  ← ${subtree.changelog}`
+        );
+      }
+      process.stdout.write('\n');
+
+      if (
+        subtree &&
+        typeof subtree === 'object' &&
+        !('undocumented' in subtree)
+      ) {
+        printTreeWithChangelog(subtree, depth + 1, pretty, isLast);
+      }
+    });
+  }
+
+  // Always print tree to console
   if (pretty) {
     console.log(chalk.bold('\n📁 Project Structure Overview:\n'));
   } else {
     console.log('\n📁 Project Structure Overview:\n');
   }
+  printTreeWithChangelog(tree, 0, pretty);
 
-  printTree(tree, 0, pretty);
-
-  // Handle output if requested
+  // Output handling (markdown/json)
   if (output) {
+    // ... your existing output logic, with small tweaks to include changelog
+
     const format = cliFormat || config.format || 'markdown';
     const outputDir = config.outputDir || 'docs';
 
     let outputPath: string;
 
     if (typeof output === 'boolean') {
-      // User just wants default output filename inside configured outputDir
       const ext = format === 'markdown' ? '.md' : `.${format}`;
       outputPath = path.join(outputDir, `overview${ext}`);
     } else {
       const ext = path.extname(output);
-      const endsWithSep = output.endsWith(path.sep);
-
       if (!ext) {
-        // No extension provided
-        if (endsWithSep) {
-          // Treat output as a directory, write default filename inside it
-          const newExt = format === 'markdown' ? '.md' : `.${format}`;
-          outputPath = path.join(output, `overview${newExt}`);
-        } else {
-          // Treat output as a filename, add extension, no outputDir prepended
-          const newExt = format === 'markdown' ? '.md' : `.${format}`;
-          outputPath = output + newExt;
-        }
+        const newExt = format === 'markdown' ? '.md' : `.${format}`;
+        outputPath = path.join(output, `overview${newExt}`);
       } else {
-        // Extension provided, treat as exact file path
         outputPath = output;
+      }
+      if (!path.isAbsolute(outputPath)) {
+        const dirname = path.dirname(outputPath);
+        if (dirname === '.' && outputDir) {
+          outputPath = path.join(outputDir, outputPath);
+        }
       }
     }
 
     if (format === 'markdown') {
+      // Extend your markdown generator to add changelog info per file (basic example)
+      function generateMarkdownWithChangelog(
+        tree: FileTree,
+        depth = 0
+      ): string {
+        let md = '';
+        const entries = Object.entries(tree).sort(([a], [b]) =>
+          a.localeCompare(b)
+        );
+        for (const [name, subtree] of entries) {
+          const indent = '  '.repeat(depth);
+          md += `${indent}- **${name}**`;
+          if (
+            subtree &&
+            'undocumented' in subtree &&
+            subtree.undocumented
+          ) {
+            md += ' ⚠️';
+          }
+          if (
+            subtree &&
+            typeof subtree === 'object' &&
+            'changelog' in subtree &&
+            subtree.changelog
+          ) {
+            md += `  \n${indent}  _Recent change_: \`${subtree.changelog}\``;
+          }
+          md += '\n';
+          if (
+            subtree &&
+            typeof subtree === 'object' &&
+            !('undocumented' in subtree)
+          ) {
+            md += generateMarkdownWithChangelog(subtree, depth + 1);
+          }
+        }
+        return md;
+      }
+
       const content =
         '# Project Structure Overview\n\n' +
-        generateMarkdownFromTree(tree);
+        generateMarkdownWithChangelog(tree);
       writeOutputFile(outputPath, content);
       console.log(
         pretty
