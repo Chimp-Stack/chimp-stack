@@ -25,6 +25,7 @@ export type DocChimpConfig = ChimpConfig & {
   include: string[];
   exclude: string[];
   outputDir: string;
+  format: 'json' | 'markdown';
   changelog: boolean;
   prSummary: boolean;
   toc: boolean;
