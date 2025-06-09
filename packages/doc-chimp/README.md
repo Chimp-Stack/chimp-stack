@@ -130,10 +130,12 @@ Lists:
 * Uses `include` / `exclude` patterns from your .chimprc, unless overridden
 
 ### Options
-| Flag                   | Description                                 |
-| ---------------------- | ------------------------------------------- |
-| `--pretty`             | Prettify output with colours                |
-| `--include <globs...>` | Override `include` patterns from `.chimprc` |
+| Flag                   | Description                                        |
+| ---------------------- | -------------------------------------------------- |
+| `--pretty`             | Prettify output with colours                       |
+| `--include <globs...>` | Override `include` patterns from `.chimprc`        |
+| `--output <file>`      | Write overview to JSON instead of console          |
+| `--undocumented`       | Only include files lacking top-level documentation |
 
 ### Example
 ```bash
