@@ -36,15 +36,19 @@ export async function handlePR(
     ...cliOptions,
   };
 
-  if (!config.githubToken) {
+  const githubToken = config.githubToken || process.env.GITHUB_TOKEN;
+
+  if (!githubToken) {
     console.error(
-      chalk.red('❌ Missing GITHUB_TOKEN in environment variables.')
+      chalk.red(
+        '❌ Missing githubToken. Please set it in your .chimprc under "githubToken", or set the GITHUB_TOKEN environment variable.'
+      )
     );
     process.exit(1);
   }
 
   const git = simpleGit();
-  const octokit = new Octokit({ auth: config.githubToken });
+  const octokit = new Octokit({ auth: githubToken });
 
   try {
     const currentBranch = (await git.branch()).current;
@@ -66,6 +70,8 @@ export async function handlePR(
       prTitle = await generatePullRequestTitle(
         diff,
         currentBranch,
+        config.enforceSemanticPrTitles,
+        config.tone,
         config.model
       );
       const isSemantic = validatePrTitle(prTitle, config, {

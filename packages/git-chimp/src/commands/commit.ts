@@ -70,6 +70,7 @@ export async function handleCommitCommand(
       const messages = await generateCommitMessages(
         diff,
         3,
+        config.enforceConventionalCommits,
         config.tone,
         config.model
       );
@@ -84,6 +85,7 @@ export async function handleCommitCommand(
     const rawSuggestions = await generateCommitMessages(
       diff,
       3,
+      config.enforceConventionalCommits,
       config.tone,
       config.model
     );
