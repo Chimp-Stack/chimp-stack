@@ -60,19 +60,6 @@ The structure is namespaced per tool. You can override values via CLI flags if n
 
 ---
 
-## 🌱 Environment Variables
-
-`getEnv()` returns validated environment variables from the current process or a `.env` file, if present.
-
-### Required Variables
-
-* `OPENAI_API_KEY`
-* (Optionally) `GITHUB_TOKEN` if using GitHub features
-
-Supports `.env` loading via [dotenv](https://www.npmjs.com/package/dotenv), but also works fine in environments where variables are set globally.
-
----
-
 ## 🏗 Exported Functions
 
 | Function                   | Description                                                                   |
