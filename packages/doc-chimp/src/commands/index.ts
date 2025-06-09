@@ -3,7 +3,7 @@ import { handleOverview } from './overview.js';
 import {
   addChimpConfigCommand,
   addChimpInitCommand,
-} from 'chimp-core';
+} from '@chimp-stack/core';
 
 const version = __VERSION__;
 

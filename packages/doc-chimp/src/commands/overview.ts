@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process';
-import { DocChimpConfig, loadChimpConfig } from 'chimp-core';
+import { DocChimpConfig, loadChimpConfig } from '@chimp-stack/core';
 import fg from 'fast-glob';
 import path from 'node:path';
 import chalk from 'chalk';

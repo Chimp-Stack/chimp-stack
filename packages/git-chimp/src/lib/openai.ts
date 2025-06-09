@@ -1,4 +1,4 @@
-import { loadChimpConfig, GitChimpConfig } from 'chimp-core';
+import { loadChimpConfig, GitChimpConfig } from '@chimp-stack/core';
 import OpenAI from 'openai';
 
 let _openai: OpenAI | null = null;

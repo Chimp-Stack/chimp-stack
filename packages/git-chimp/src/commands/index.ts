@@ -5,7 +5,7 @@ import { handleChangelog } from './changelog.js';
 import {
   addChimpConfigCommand,
   addChimpInitCommand,
-} from 'chimp-core';
+} from '@chimp-stack/core';
 
 const version = __VERSION__;
 const program = new Command();
