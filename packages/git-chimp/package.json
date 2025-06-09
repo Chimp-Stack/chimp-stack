@@ -1,5 +1,5 @@
 {
-  "name": "git-chimp",
+  "name": "@chimp-stack/git-chimp",
   "version": "0.11.0",
   "scripts": {
     "clean": "rm -rf dist",
