@@ -29,16 +29,23 @@ export async function generateCommitMessages(
   count = 3,
   enforceConventionalCommits = false,
   tone?: string,
-  model = 'gpt-3.5-turbo'
+  model = 'gpt-3.5-turbo',
+  scope?: string
 ): Promise<string[]> {
   const openai = getOpenAIInstance();
 
+  const scopeInstruction = scope
+    ? ` Use the scope "${scope}" in the commit messages (format: type(${scope}): description).`
+    : '';
+
   const systemPrompt = enforceConventionalCommits
-    ? `You are an assistant that strictly generates Conventional Commit messages. Messages must follow the Conventional Commits specification and format.`
-    : `You are a helpful assistant that writes clear, concise Git commit messages based on Git diffs.`;
+    ? `You are an assistant that strictly generates Conventional Commit messages. Messages must follow the Conventional Commits specification and format.${scopeInstruction}`
+    : `You are a helpful assistant that writes clear, concise Git commit messages based on Git diffs.${scopeInstruction}`;
 
   const toneDescription =
-    !enforceConventionalCommits && tone ? ` with a ${tone} tone` : '';
+    !enforceConventionalCommits && tone
+      ? ` with a ${tone} tone.`
+      : '';
 
   const userPrompt = `
 Here is the diff:
