@@ -128,18 +128,27 @@ Lists:
 
 * Files and subfolders in your project
 * Uses `include` / `exclude` patterns from your .chimprc, unless overridden
+* Optionally outputs a markdown (`.md`) or JSON file
 
 ### Options
-| Flag                   | Description                                        |
-| ---------------------- | -------------------------------------------------- |
-| `--pretty`             | Prettify output with colours                       |
-| `--include <globs...>` | Override `include` patterns from `.chimprc`        |
-| `--output <file>`      | Write overview to JSON instead of console          |
-| `--undocumented`       | Only include files lacking top-level documentation |
+| Flag                   | Description                                                                                  |
+| ---------------------- | -------------------------------------------------------------------------------------------- |
+| `--pretty`             | Prettify output with colors                                                                  |
+| `--include <globs...>` | Override `include` patterns from `.chimprc`                                                  |
+| `--output [path]`      | Write overview to file instead of console                                                    |
+|                        | - If no path provided, writes `overview.md` inside the configured output directory (default) |
+|                        | - If path is a directory (ends with `/`), writes `overview.md` inside that directory         |
+|                        | - If path is a filename without extension, appends `.md` or `.json` depending on format      |
+|                        | - If path is a filename with extension, uses it as-is                                        |
+|                        | - If relative filename given, does NOT prepend output directory                              |
+| `--undocumented`       | Only include files lacking top-level documentation                                           |
+
 
 ### Example
 ```bash
-doc-chimp overview --pretty --include src/ packages/utils/
+doc-chimp overview --pretty --include src/ packages/utils/ --output docs/
+doc-chimp overview --output project-structure.md
+doc-chimp overview --output ./custom-output.json --format json
 ```
 
 ---
