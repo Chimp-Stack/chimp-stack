@@ -12,8 +12,7 @@
     [
       "@semantic-release/npm",
       {
-        "publishArgs": ["--access", "public"],
-        "pkgRoot": "packages/chimp-core"
+        "publishArgs": ["--access", "public"]
       }
     ],
     [
