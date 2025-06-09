@@ -1,6 +1,5 @@
 {
   "extends": "semantic-release-monorepo",
-  "monorepoPath": "packages/git-chimp",
   "tagFormat": "@chimp-stack/git-chimp@${version}",
   "initialReleaseVersion": "0.12.0",
   "plugins": [
