@@ -27,6 +27,10 @@ export function runCLI() {
       'Generate a commit message with GPT based on staged changes'
     )
     .option(
+      '--scope <scope>',
+      'Optional scope in include in commit message'
+    )
+    .option(
       '--tone <tone>',
       'Set the tone of the message (e.g. sarcastic, friendly, neutral)'
     )

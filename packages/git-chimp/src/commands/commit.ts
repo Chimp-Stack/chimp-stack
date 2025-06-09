@@ -13,6 +13,7 @@ export async function handleCommitCommand(
     custom?: boolean;
     message?: boolean;
     enforceCc?: boolean;
+    scope?: string;
   }
 ) {
   const fileConfig = loadChimpConfig('gitChimp') as GitChimpConfig;
@@ -70,9 +71,10 @@ export async function handleCommitCommand(
       const messages = await generateCommitMessages(
         diff,
         3,
-        config.enforceConventionalCommits,
+        enforceCommits,
         config.tone,
-        config.model
+        config.model,
+        cliOptions?.scope
       );
       const first = messages[0] ?? 'chore: update';
 
@@ -85,9 +87,10 @@ export async function handleCommitCommand(
     const rawSuggestions = await generateCommitMessages(
       diff,
       3,
-      config.enforceConventionalCommits,
+      enforceCommits,
       config.tone,
-      config.model
+      config.model,
+      cliOptions?.scope
     );
     const messages = cleanCommitMessages(rawSuggestions);
     messages.push('✏️ Write my own');

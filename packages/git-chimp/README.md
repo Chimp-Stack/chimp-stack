@@ -157,13 +157,15 @@ git-chimp commit
 Generates a commit message based on your staged changes.
 
 #### Options
-| Flag              | Description                                                          |
-| ----------------- | -------------------------------------------------------------------- |
-| `--tone <style>`  | Writing style for commit message                                     |
-| `--model <model>` | OpenAI model to use                                                  |
-| `--enforce-cc`    | Enforce Conventional Commit style                                    |
-| `-c`, `--custom`  | Manually type your commit message (you beautiful control freak)      |
-| `-m`, `--message` | Print GPT commit message to stdout and exit (good for CI, scripting) |
+| Flag               | Description                                                            |
+| ------------------ | ---------------------------------------------------------------------- |
+| `--tone <style>`   | Writing style for commit message                                       |
+| `--model <model>`  | OpenAI model to use                                                    |
+| `--enforce-cc`     | Enforce Conventional Commit style                                      |
+| `--scope <scope>`  | Optional scope to include in commit message (e.g. `feat(scope): ...`)  |
+| `-c`, `--custom`   | Manually type your commit message (you beautiful control freak)        |
+| `-m`, `--message`  | Print GPT commit message to stdout and exit (good for CI, scripting)   |
+
 
 ---
 
