@@ -1,9 +1,8 @@
 {
+  "extends": "semantic-release-monorepo",
+  "monorepoPath": "packages/doc-chimp",
   "tagFormat": "doc-chimp@${version}",
   "plugins": [
-    ["semantic-release-monorepo", {
-      "monorepoPath": "packages/doc-chimp"
-    }],
     ["@semantic-release/commit-analyzer"],
     ["@semantic-release/release-notes-generator"],
     ["@semantic-release/npm"],

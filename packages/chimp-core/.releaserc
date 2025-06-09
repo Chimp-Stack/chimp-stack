@@ -1,9 +1,8 @@
 {
+  "extends": "semantic-release-monorepo",
+  "monorepoPath": "packages/chimp-core",
   "tagFormat": "chimp-core@${version}",
   "plugins": [
-    ["semantic-release-monorepo", {
-      "monorepoPath": "packages/chimp-core"
-    }],
     ["@semantic-release/commit-analyzer"],
     ["@semantic-release/release-notes-generator"],
     ["@semantic-release/npm"],
