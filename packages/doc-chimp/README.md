@@ -121,16 +121,24 @@ Sets a config key. Supports string, boolean, number, and arrays (as comma-separa
 ## 📂 Overview Command
 
 ```bash
-doc-chimp overview
+doc-chimp overview [options]
 ```
 
 Lists:
 
-* Files and subfolders in your `src/` directory
-* Exported functions and types from each file
-* Flags anything undocumented or mysterious
+* Files and subfolders in your project
+* Uses `include` / `exclude` patterns from your .chimprc, unless overridden
 
-No GPT required—just cold, hard AST parsing.
+### Options
+| Flag                   | Description                                 |
+| ---------------------- | ------------------------------------------- |
+| `--pretty`             | Prettify output with colours                |
+| `--include <globs...>` | Override `include` patterns from `.chimprc` |
+
+### Example
+```bash
+doc-chimp overview --pretty --include src/ packages/utils/
+```
 
 ---
 
