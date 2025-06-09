@@ -9,7 +9,7 @@ import {
   logError,
   logWarn,
   logSuccess,
-} from 'chimp-core';
+} from '@chimp-stack/core';
 
 const git = simpleGit();
 

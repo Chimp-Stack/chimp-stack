@@ -33,13 +33,13 @@
 ## 📦 Installation
 
 ```bash
-npm install -g doc-chimp
+npm install -g @chimp-stack/doc-chimp
 ```
 
 Or just use via `npx`:
 
 ```bash
-npx doc-chimp overview
+npx @chimp-stack/doc-chimp overview
 ```
 
 ---
@@ -49,7 +49,7 @@ npx doc-chimp overview
 You can quickly create or update your `.chimprc` file using the built-in init command:
 
 ```bash
-npx doc-chimp init
+npx @chimp-stack/doc-chimp init
 ```
 
 You'll be prompted to choose:

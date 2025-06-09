@@ -1,4 +1,4 @@
-import { GitChimpConfig, logWarn } from 'chimp-core';
+import { GitChimpConfig, logWarn } from '@chimp-stack/core';
 
 export function guessSemanticPrefix(diff: string): string {
   const lowerDiff = diff.toLowerCase();

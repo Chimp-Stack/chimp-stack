@@ -15,7 +15,7 @@ This package contains the core logic for reading `.chimprc` config files, loadin
 Install via npm:
 
 ```bash
-npm install chimp-core
+npm install @chimp-stack/core
 ```
 
 Or in a monorepo:

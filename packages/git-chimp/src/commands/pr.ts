@@ -15,7 +15,7 @@ import {
   logMuted,
   logSuccess,
   logWarn,
-} from 'chimp-core';
+} from '@chimp-stack/core';
 
 function askUser(question: string): Promise<string> {
   const rl = readline.createInterface({

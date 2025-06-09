@@ -8,7 +8,7 @@ import {
   logError,
   logSuccess,
   logWarn,
-} from 'chimp-core';
+} from '@chimp-stack/core';
 
 export async function handleChangelog(
   options: {

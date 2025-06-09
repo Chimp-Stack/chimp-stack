@@ -34,13 +34,13 @@ Coming soon:
 ## 📦 Installation
 
 ```bash
-npm install -g git-chimp
+npm install -g @chimp-stack/git-chimp
 ```
 
 Or use it via npx:
 
 ```bash
-npx git-chimp commit
+npx @chimp-stack/git-chimp commit
 ```
 
 ---
@@ -50,7 +50,7 @@ npx git-chimp commit
 You can quickly create or update your `.chimprc` file using the built-in init command:
 
 ```bash
-npx git-chimp init
+npx @chimp-stack/git-chimp init
 ```
 
 You'll be prompted to choose:
