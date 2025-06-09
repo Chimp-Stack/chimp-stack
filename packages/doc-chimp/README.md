@@ -16,17 +16,17 @@
 
 ## 🧠 Features
 
-* 🔍 `doc-chimp overview` – Lists files and exports in your project for a bird’s-eye view
-* ⚙️ `doc-chimp config` – Read and write `.chimprc` values with ease
-* 📂 Supports per-package config in monorepos
-* 🧪 No AI integration (yet) – but we're working on it!
+- 🔍 `doc-chimp overview` – Lists files and exports in your project for a bird’s-eye view
+- ⚙️ `doc-chimp config` – Read and write `.chimprc` values with ease
+- 📂 Supports per-package config in monorepos
+- 🧪 No AI integration (yet) – but the monkeys are learning fast!
 
-Coming soon:
+### Coming Soon
 
-* 🤖 AI-generated inline documentation for TypeScript
-* 📝 AI-generated READMEs and usage examples
-* 📖 HTML docs generation from code + config
-* 🧠 Integration with `git-chimp` changelogs for smarter release notes
+- 🧠 AI-generated inline docs (TypeScript docstrings on monkey steroids)
+- 📚 Static HTML documentation built from your code and `.chimprc` config
+- 📘 Smarter READMEs and usage examples with AI help
+- 🔗 Cross-linked changelogs with 1 for rich release notes - *early support already available in `overview`*
 
 ---
 
@@ -78,9 +78,13 @@ Some fields (like `openaiApiKey`) are only written to global config for security
 ```json
 {
   "docChimp": {
+    "exclude": [
+      "node_modules",
+      "dist"
+    ],
     "format": "markdown",
-    "output": "docs/",
-    "includePrivate": false
+    "outputDir": "docs",
+    "changelog": true
   }
 }
 ```
@@ -121,27 +125,38 @@ Sets a config key. Supports string, boolean, number, and arrays (as comma-separa
 ## 📂 Overview Command
 
 ```bash
-doc-chimp overview
+doc-chimp overview [options]
 ```
 
 Lists:
 
-* Files and subfolders in your `src/` directory
-* Exported functions and types from each file
-* Flags anything undocumented or mysterious
+* Files and subfolders in your project
+* Uses `include` / `exclude` patterns from your .chimprc, unless overridden
+* Optionally outputs a markdown (`.md`) or JSON file
 
-No GPT required—just cold, hard AST parsing.
+### Options
+| Flag                   | Description                                                                                  |
+| ---------------------- | -------------------------------------------------------------------------------------------- |
+| `--pretty`             | Prettify output with colors                                                                  |
+| `--include <globs...>` | Override `include` patterns from `.chimprc`                                                  |
+| `--output [path]`      | Write overview to file instead of console                                                    |
+|                        | - If no path provided, writes `overview.md` inside the configured output directory (default) |
+|                        | - If path is a directory (ends with `/`), writes `overview.md` inside that directory         |
+|                        | - If path is a filename without extension, appends `.md` or `.json` depending on format      |
+|                        | - If path is a filename with extension, uses it as-is                                        |
+|                        | - If relative filename given, does NOT prepend output directory                              |
+| `--undocumented`       | Only include files lacking top-level documentation                                           |
+| `--show-changelog`     | Include the latest changelog entry for each file (requires changelog support in `.chimprc`)  |
+                                       |
 
----
 
-## 🚧 Roadmap
-
-Features on the way:
-
-* 🧠 AI-generated inline docs based on your code (like docstrings on monkey steroids)
-* 📚 Render static HTML documentation from `.chimprc` config
-* 📘 Smarter README and usage examples using GPT
-* 🔗 Cross-linking with changelogs from `git-chimp`
+### Example
+```bash
+doc-chimp overview --pretty --include src/ packages/utils/ --output docs/
+doc-chimp overview --output project-structure.md
+doc-chimp overview --output ./custom-output.json --format json
+doc-chimp overview --show-changelog --pretty
+```
 
 ---
 

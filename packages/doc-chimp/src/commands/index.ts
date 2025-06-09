@@ -30,6 +30,24 @@ export function runCLI() {
       '--include <globs...>',
       'Override include globs from .chimprc'
     )
+
+    .option(
+      '--output [file]',
+      'Write the overview tree to a file or directory. If no file is provided, defaults to outputDir/overview.{format}'
+    )
+    .option(
+      '--format <format>',
+      'Output format (json | markdown)',
+      'markdown'
+    )
+    .option(
+      '--undocumented',
+      'Only include files lacking documentation'
+    )
+    .option(
+      '--show-changelog',
+      'Include latest changelog entry for each file'
+    )
     .action(handleOverview);
 
   program.parse(process.argv);
