@@ -78,9 +78,12 @@ Some fields (like `openaiApiKey`) are only written to global config for security
 ```json
 {
   "docChimp": {
+    "exclude": [
+      "node_modules",
+      "dist"
+    ],
     "format": "markdown",
-    "output": "docs/",
-    "includePrivate": false
+    "outputDir": "docs",
   }
 }
 ```
