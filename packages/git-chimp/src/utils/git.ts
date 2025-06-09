@@ -1,5 +1,4 @@
-import chalk from 'chalk';
-import { GitChimpConfig } from 'chimp-core';
+import { GitChimpConfig, logWarn } from 'chimp-core';
 
 export function guessSemanticPrefix(diff: string): string {
   const lowerDiff = diff.toLowerCase();
@@ -54,7 +53,7 @@ export function validatePrTitle(
     if (opts.throwOnError) {
       throw new Error(msg);
     } else {
-      console.warn(chalk.yellow(msg));
+      logWarn(msg);
     }
   }
 

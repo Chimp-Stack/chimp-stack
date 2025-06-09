@@ -7,7 +7,15 @@ import {
 } from '../lib/openai.js';
 import readline from 'readline';
 import { validatePrTitle } from '../utils/git.js';
-import { GitChimpConfig, loadChimpConfig } from 'chimp-core';
+import {
+  GitChimpConfig,
+  loadChimpConfig,
+  logError,
+  logInfo,
+  logMuted,
+  logSuccess,
+  logWarn,
+} from 'chimp-core';
 
 function askUser(question: string): Promise<string> {
   const rl = readline.createInterface({
@@ -39,10 +47,8 @@ export async function handlePR(
   const githubToken = config.githubToken || process.env.GITHUB_TOKEN;
 
   if (!githubToken) {
-    console.error(
-      chalk.red(
-        '❌ Missing githubToken. Please set it in your .chimprc under "githubToken", or set the GITHUB_TOKEN environment variable.'
-      )
+    logError(
+      '❌ Missing githubToken. Please set it in your .chimprc under "githubToken", or set the GITHUB_TOKEN environment variable.'
     );
     process.exit(1);
   }
@@ -52,15 +58,10 @@ export async function handlePR(
 
   try {
     const currentBranch = (await git.branch()).current;
-
-    console.log(
-      chalk.blue(
-        `📦 Preparing PR for branch: ${chalk.bold(currentBranch)}`
-      )
+    logInfo(
+      `📦 Preparing PR for branch: ${chalk.bold(currentBranch)}`
     );
-    console.log(
-      chalk.blue('🔍 Generating pull request description with AI...')
-    );
+    logInfo('🔍 Generating pull request description with AI...');
 
     const diff = await git.diff(['main', currentBranch]);
     let prTitle = `🚀 ${currentBranch}`;
@@ -79,10 +80,8 @@ export async function handlePR(
       });
       if (!isSemantic) {
         if (!isSemantic) {
-          console.warn(
-            chalk.yellow(
-              `🤔 Generated PR title still isn't semantic: "${prTitle}"`
-            )
+          logWarn(
+            `🤔 Generated PR title still isn't semantic: "${prTitle}"`
           );
         }
       }
@@ -101,19 +100,15 @@ export async function handlePR(
 
     const validModes = ['open', 'draft', 'display'];
     if (!validModes.includes(prMode)) {
-      console.error(
-        chalk.red(
-          `Invalid prMode: ${prMode}. Must be one of ${validModes.join(', ')}`
-        )
+      logError(
+        `Invalid prMode: ${prMode}. Must be one of ${validModes.join(', ')}`
       );
       process.exit(1);
     }
 
     if (prMode === 'display') {
-      console.log(chalk.blue(`\n--- PR Title ---\n${prTitle}\n`));
-      console.log(
-        chalk.blue(`\n--- PR Description ---\n${description}\n`)
-      );
+      logInfo(`\n--- PR Title ---\n${prTitle}\n`);
+      logInfo(`\n--- PR Description ---\n${description}\n`);
       process.exit(0);
     }
 
@@ -126,10 +121,8 @@ export async function handlePR(
       const originRemote = remotes.find((r) => r.name === 'origin');
 
       if (!originRemote || !originRemote.refs.fetch) {
-        console.error(
-          chalk.red(
-            '❌ Could not determine the GitHub repository from the remote.'
-          )
+        logError(
+          '❌ Could not determine the GitHub repository from the remote.'
         );
         process.exit(1);
       }
@@ -140,10 +133,8 @@ export async function handlePR(
       );
 
       if (!match) {
-        console.error(
-          chalk.red(
-            `❌ Failed to parse GitHub repo from remote URL: ${repoUrl}`
-          )
+        logError(
+          `❌ Failed to parse GitHub repo from remote URL: ${repoUrl}`
         );
         process.exit(1);
       }
@@ -161,14 +152,12 @@ export async function handlePR(
     const existingPR = existingPRs.data[0];
 
     if (existingPR) {
-      console.log(
-        chalk.yellow(
-          `⚠️ A pull request already exists: ${chalk.underline(existingPR.html_url)}`
-        )
+      logWarn(
+        `⚠️ A pull request already exists: ${chalk.underline(existingPR.html_url)}`
       );
 
       if (shouldAutoUpdate) {
-        console.log(chalk.blue('🔁 Updating existing PR...'));
+        logInfo('🔁 Updating existing PR...');
         await octokit.rest.pulls.update({
           owner,
           repo,
@@ -176,7 +165,7 @@ export async function handlePR(
           body: description,
           draft: prMode === 'draft',
         });
-        console.log(chalk.green('✅ PR updated successfully.'));
+        logSuccess('✅ PR updated successfully.');
       } else {
         const answer = await askUser(
           'Do you want to update the existing PR? (y/N): '
@@ -189,9 +178,9 @@ export async function handlePR(
             body: description,
             draft: prMode === 'draft',
           });
-          console.log(chalk.green('✅ PR updated successfully.'));
+          logSuccess('✅ PR updated successfully.');
         } else {
-          console.log(chalk.gray('🚫 PR update canceled.'));
+          logMuted('🚫 PR update canceled.');
         }
       }
     } else {
@@ -205,16 +194,14 @@ export async function handlePR(
         draft: prMode === 'draft',
       });
 
-      console.log(
-        chalk.green(
-          `✅ PR created: ${chalk.underline.blue(pr.data.html_url)}`
-        )
+      logSuccess(
+        `✅ PR created: ${chalk.underline.blue(pr.data.html_url)}`
       );
     }
 
     process.exit(0);
   } catch (error) {
-    console.error(chalk.red('🔥 Failed to handle PR:'), error);
+    logError(`🔥 Failed to handle PR: ${error}`);
     process.exit(1);
   }
 }

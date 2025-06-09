@@ -1,9 +1,14 @@
 import { simpleGit } from 'simple-git';
-import chalk from 'chalk';
 import fs from 'fs';
 import type { DefaultLogFields, ListLogLine } from 'simple-git';
 import { generateChangelogEntries } from '../lib/openai.js'; // New helper
-import { GitChimpConfig, loadChimpConfig } from 'chimp-core';
+import {
+  GitChimpConfig,
+  loadChimpConfig,
+  logError,
+  logSuccess,
+  logWarn,
+} from 'chimp-core';
 
 export async function handleChangelog(
   options: {
@@ -20,10 +25,8 @@ export async function handleChangelog(
   const to = options.to || 'HEAD';
 
   if (!from) {
-    console.error(
-      chalk.red(
-        '❌ No tags found to use as a starting point. Use --from manually.'
-      )
+    logError(
+      '❌ No tags found to use as a starting point. Use --from manually.'
     );
     process.exit(1);
   }
@@ -32,9 +35,7 @@ export async function handleChangelog(
   const commits: (DefaultLogFields & ListLogLine)[] = [...log.all];
 
   if (commits.length === 0) {
-    console.log(
-      chalk.yellow('⚠️ No commits found between specified tags.')
-    );
+    logWarn('⚠️ No commits found between specified tags.');
     process.exit(0);
   }
 
@@ -84,9 +85,7 @@ export async function handleChangelog(
 
   if (options.output) {
     fs.appendFileSync(options.output, output);
-    console.log(
-      chalk.green(`✅ Changelog written to ${options.output}`)
-    );
+    logSuccess(`✅ Changelog written to ${options.output}`);
   } else {
     console.log(output);
   }
