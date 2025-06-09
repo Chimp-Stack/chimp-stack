@@ -1,10 +1,15 @@
 import { generateCommitMessages } from '../lib/openai.js';
 import { simpleGit } from 'simple-git';
 import inquirer from 'inquirer';
-import chalk from 'chalk';
 import { cleanCommitMessages } from '../utils/format.js';
 import { isConventionalCommit } from '../utils/git.js';
-import { GitChimpConfig, loadChimpConfig } from 'chimp-core';
+import {
+  GitChimpConfig,
+  loadChimpConfig,
+  logError,
+  logWarn,
+  logSuccess,
+} from 'chimp-core';
 
 const git = simpleGit();
 
@@ -32,7 +37,7 @@ export async function handleCommitCommand(
     const diff = await git.diff(['--staged']);
 
     if (!diff) {
-      console.log(chalk.yellow('⚠️ No staged changes found.'));
+      logWarn('⚠️ No staged changes found.');
       process.exit(0);
     }
 
@@ -48,21 +53,18 @@ export async function handleCommitCommand(
         },
       ]);
       if (enforceCommits && !isConventionalCommit(customMessage)) {
-        console.log(
-          chalk.red(
-            '❌ Commit message does not follow Conventional Commit format.'
-          )
+        logError(
+          '❌ Commit message does not follow Conventional Commit format.'
         );
-        console.log(
-          chalk.yellow(
-            'Expected format: "type(scope): description"\nExample: "feat(auth): add login button"'
-          )
+
+        logWarn(
+          'Expected format: "type(scope): description"\nExample: "feat(auth): add login button"'
         );
         process.exit(1);
       }
 
       await git.commit(customMessage);
-      console.log(chalk.green('✅ Commit created!'));
+      logSuccess('✅ Commit created!');
       process.exit(0);
     }
 
@@ -123,21 +125,17 @@ export async function handleCommitCommand(
     }
 
     if (enforceCommits && !isConventionalCommit(finalMessage)) {
-      console.log(
-        chalk.red(
-          '❌ Commit message does not follow Conventional Commit format.'
-        )
+      logError(
+        '❌ Commit message does not follow Conventional Commit format.'
       );
-      console.log(
-        chalk.yellow(
-          'Expected format: "type(scope): description"\nExample: "feat(auth): add login button"'
-        )
+      logWarn(
+        'Expected format: "type(scope): description"\nExample: "feat(auth): add login button"'
       );
       process.exit(1);
     }
     await git.commit(finalMessage);
-    console.log(chalk.green('✅ Commit created!'));
+    logSuccess('✅ Commit created!');
   } catch (error) {
-    console.error(chalk.red('❌ Error creating commit:'), error);
+    logError(`❌ Error creating commit: ${error}`);
   }
 }

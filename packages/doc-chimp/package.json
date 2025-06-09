@@ -1,5 +1,5 @@
 {
-  "name": "doc-chimp",
+  "name": "@chimp-stack/doc-chimp",
   "version": "0.6.0",
   "type": "module",
   "bin": {
@@ -28,7 +28,7 @@
   "dependencies": {
     "@types/node": "^22.15.29",
     "chalk": "^5.4.1",
-    "chimp-core": "*",
+    "@chimp-stack/core": "*",
     "commander": "^14.0.0",
     "comment-parser": "^1.4.1",
     "fast-glob": "^3.3.3",
