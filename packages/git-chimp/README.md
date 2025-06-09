@@ -10,15 +10,24 @@
 
 `git-chimp` automates your Git commits and pull requests using AI. It analyzes your staged changes or commit history, then generates surprisingly coherent commit messages and PRs—so you can stop typing “fix stuff” for the fifth time today.
 
+> ⚠️ This is an early-stage tool! Features are limited, monkeys are still learning.
+
 ---
 
 ## 🧠 Features
 
-- 🧵 Commit message generation from your actual staged changes
-- 🚀 GPT-generated pull request descriptions from commit diffs
-- ⚙️ Setup wizard to configure OpenAI and GitHub tokens
-- 🧃 Options to run in interactive or non-interactive mode
-- 🫣 Optional fallback to detect your repo from `.git/config`
+* 🧵 `git-chimp commit` – GPT-powered commit message generation from staged changes
+* 🚀 `git-chimp pr` – GPT-generated pull request descriptions from commit diffs
+* 📝 `git-chimp changelog` – Auto-generate changelogs, with optional AI summaries
+* ⚙️ `git-chimp config` – Manage `.chimprc` settings without editing the file
+* 🧪 Supports both local and global `.chimprc` configs
+* 🐙 Integrates with GitHub for PR management
+
+Coming soon:
+
+* 🔀 Branch naming assistant (`git-chimp name` or `git-chimp branch`)
+* 🧪 Dry run support (`--dry-run`)
+* 🍿 Emoji support and improved Conventional Commit modes
 
 ---
 
@@ -88,50 +97,56 @@ Some fields (like `openaiApiKey`) are only written to global config for security
 }
 ```
 
-### Available Config Options
+### Config Options
 
-| Key                       | Type      | Description                                                                         |
-| ------------------------- | --------- | ----------------------------------------------------------------------------------- |
-| `tone`                    | `string`  | Sets the writing style, e.g., `"corporate-safe"`, `"dry sarcasm"`, `"chaotic evil"` |
-| `model`                   | `string`  | OpenAI model to use. One of: `gpt-3.5-turbo`, `gpt-4`, `gpt-4o`, `gpt-4o-mini`      |
-| `enforceConventionalCommits` | `boolean` | If `true`, commit messages follow conventional commit style: `type(scope): description` (e.g., `feat(auth): add login button`)      
-| `enforceSemanticPrTitles` | `boolean` | If `true`, PR titles follow semantic-release style (e.g., `feat:`)                  |
-| `prMode`                  | `string`  | One of: `open` (default), `draft`, or `display` (just show the PR content)          |
-| `changelog`               | `object`  | Options for changelog generation (see below)                                        |
+| Key                          | Type      | Description                                                                          |
+| ---------------------------- | --------- | ------------------------------------------------------------------------------------ |
+| `tone`                       | `string`  | Sets the writing style (e.g., `"corporate-safe"`, `"dry sarcasm"`, `"chaotic evil"`) |
+| `model`                      | `string`  | OpenAI model to use (`gpt-3.5-turbo`, `gpt-4`, `gpt-4o`, `gpt-4o-mini`)              |
+| `enforceConventionalCommits` | `boolean` | If `true`, enforces Conventional Commit style                                        |
+| `enforceSemanticPrTitles`    | `boolean` | If `true`, enforces semantic PR titles (e.g., `feat:` prefix)                        |
+| `prMode`                     | `string`  | PR mode: `open` (default), `draft`, `display`                                        |
+| `changelog`                  | `object`  | Changelog generation options (see below)                                             |
 
-If you include a `changelog` object, it supports the following:
-| `changelog` key | Type      | Description                                                             |
-| --------------- | --------- | ----------------------------------------------------------------------- |
-| `aiSummary`     | `boolean` | If `true`, uses OpenAI to generate a summary section for the changelog  |
-| `output`        | `string`  | File path to write or append changelog content (e.g., `"CHANGELOG.md"`) |
-| `from`          | `string`  | Git tag or commit to start from (e.g., `"v1.0.0"`)                      |
-| `to`            | `string`  | Git ref to end at (defaults to `HEAD` if omitted)                       |
-
-You can override any of these with CLI flags when running `git-chimp changelog`.
-
-
-### Command-Line Overrides
-You can also override certain config options via CLI flags (these take precedence over `.chimprc`):
-
-```bash
-git-chimp pr --tone "inspired by Linus Torvalds" --model gpt-4o --pr-mode draft
-```
-
-That would skip enforcing semantic PR title style for that invocation, regardless of the `.chimprc` setting.
+`changelog` options:
+| Key         | Type      | Description                                                             |
+| ----------- | --------- | ----------------------------------------------------------------------- |
+| `aiSummary` | `boolean` | If `true`, generates an AI summary section for the changelog            |
+| `output`    | `string`  | File path to write or append changelog content (e.g., `"CHANGELOG.md"`) |
+| `from`      | `string`  | Git tag or commit to start from (e.g., `"v1.0.0"`)                      |
+| `to`        | `string`  | Git ref to end at (defaults to `HEAD` if omitted)                       |
 
 ---
 
-## 🧪 CLI Usage
+## 🛠 Config Commands
 
-### `config`
+You can use `git-chimp config` to manage settings in your `.chimprc` without editing the file manually (though you still can if you like that sort of thing).
 
-Store project defaults.
+### `config list`
 
 ```bash
-git-chimp config --list
-git-chimp config --get model
-git-chimp config --set model --value gpt-4o
+git-chimp config list
 ```
+Prints all current config values under the `gitChimp` namespace.
+
+### `config get <key>`
+
+```bash
+git-chimp config get model
+```
+Gets the value of a specific config key.
+
+### config set <key> <value>
+
+```bash
+git-chimp config set tone "corporate-safe"
+git-chimp config set enforceSemanticPrTitles true
+```
+Sets a config key. Supports string, boolean, number, and arrays (as comma-separated values).
+
+---
+
+## 🧪 CLI Commands
 
 ### `commit`
 
@@ -139,71 +154,69 @@ git-chimp config --set model --value gpt-4o
 git add .
 git-chimp commit
 ```
+Generates a commit message based on your staged changes.
 
-#### Options:
+#### Options
+| Flag              | Description                                                          |
+| ----------------- | -------------------------------------------------------------------- |
+| `--tone <style>`  | Writing style for commit message                                     |
+| `--model <model>` | OpenAI model to use                                                  |
+| `--enforce-cc`    | Enforce Conventional Commit style                                    |
+| `-c`, `--custom`  | Manually type your commit message (you beautiful control freak)      |
+| `-m`, `--message` | Print GPT commit message to stdout and exit (good for CI, scripting) |
 
-| Flag              | Description                                                              |
-| ----------------- | ------------------------------------------------------------------------ |
-| `--tone <style>`  | Optional writing style for commit messages (e.g., `"corporate-safe"`)    |
-| `--model <model>` | OpenAI model to use (e.g., `gpt-3.5-turbo`, `gpt-4o`)                    |
-| `--enfore-cc `    | Enforce conventional commit messages                                     |
-| `-c`, `--custom`  | Use your own lovingly typed commit message (you beautiful control freak) |
-| `-m`, `--message` | Print GPT commit messages to stdout and exit (good for CI, scripting)    |
-
+---
 
 ### `pr`
 
 ```bash
 git-chimp pr
 ```
-
 Generates a PR description and opens one on GitHub.
 
-#### Options:
+#### Options
+| Flag               | Description                                                        |
+| ------------------ | ------------------------------------------------------------------ |
+| `--tone <style>`   | Writing style for PR                                               |
+| `--model <model>`  | OpenAI model to use                                                |
+| `--pr-mode <mode>` | PR mode: `open`, `draft`, `display`                                |
+| `--semantic-title` | Enforce semantic PR title style                                    |
+| `-u`, `--update`   | Update an existing PR instead of creating a new one (if it exists) |
 
-| Flag               | Description                                                            |
-| ------------------ | ---------------------------------------------------------------------- |
-| `--tone <style>`   | Optional writing style for the PR (e.g., `"professional"`, `"snarky"`) |
-| `--model <model>`  | OpenAI model to use for generation                                     |
-| `--pr-mode <mode>` | One of: `open`, `draft`, or `display`                                  |
-| `--semantic-title` | Enforce semantic PR titles                                             |
-| `-u`, `--update`   | Updates an existing PR instead of creating a new one (if it exists)    |
+---
 
 ### `changelog`
 
 ```bash
 git-chimp changelog
 ```
+Generates a changelog from commit history.
 
-Generates a changelog from commit history, optionally summarized with AI.
-
-#### Options:
-
-| Flag               | Description                                                                 |
-| ------------------ | --------------------------------------------------------------------------- |
-| `--from <tag>`     | Git tag or commit to start from (defaults to latest tag)                    |
-| `--to <ref>`       | Git ref to end at (defaults to `HEAD`)                                      |
-| `--output <file>`  | Path to a file to append the changelog to                                   |
-| `--ai`             | Use OpenAI to generate a summary section                                    |
-
+#### Options
+| Flag              | Description                                              |
+| ----------------- | -------------------------------------------------------- |
+| `--from <tag>`    | Git tag or commit to start from (defaults to latest tag) |
+| `--to <ref>`      | Git ref to end at (defaults to `HEAD`)                   |
+| `--output <file>` | File path to write the changelog to                      |
+| `--ai`            | Use OpenAI to generate a summary section                 |
 
 ---
+
 ## 💡 Pro Tip
+
 The config system is merge-friendly. It works like this (highest priority wins):
 
-Command-line flags (e.g., --tone)
+1. Command-line flags (e.g., `--tone`)
+2. `.chimprc` config
+3. Defaults baked into the tool
 
-.chimprc config
-
-Defaults baked into the tool
-
-So yeah—you can go full control freak without ever touching a config file, or commit to the chimp with a persistent setup.
+So yeah — you can go full control freak without ever touching a config file, or commit to the chimp with a persistent setup.
 
 ---
 
 ## 🧨 Can I override git commit?
 
-**Yes... but with caution.** You _can_ alias `git commit` to use `git-chimp`, but this disables standard Git commit behavior.
+**Yes... but with caution.** You *can* alias `git commit` to use `git-chimp`, but this disables standard Git commit behavior.
 
 Here’s an alias override (not recommended unless you're into danger):
 
@@ -219,7 +232,6 @@ git config --global alias.chimp-pr '!git-chimp pr'
 ```
 
 Then use:
-
 ```bash
 git chimp-commit
 git chimp-pr
@@ -234,48 +246,34 @@ alias gp='git-chimp pr'
 
 ---
 
-## 🧪 Upcoming Features
+## 🚧 Roadmap
 
-Here’s what’s cooking in the banana lab:
+Features on the way:
 
-- ~~🎭 `--tone` option for different writing styles: _e.g., “corporate-safe”, “dry sarcasm”, “inspired by Linus Torvalds”_~~ ✅ *Done*
-- ~~📓 `git-chimp changelog` – auto-generate changelogs from commits~~ ✅ *Done*
-- 🍿 Emoji support and Conventional Commit modes
-- ~~⚙️ `.chimprc` file for personal and team-level preferences - currently per-project. Updates will allow for options like `~/.chimprc`~~ ✅ *Done*
-- 🔀 Branch naming assistant (`git-chimp name` or `git-chimp branch`)
-- 🧪 Dry run support (`--dry-run`)
-
----
-
-## 📦 Version
-
-This is pre-1.0 software. The API may change. The monkey may escape.
-
----
-
-## 🧠 Built With
-
-- [OpenAI GPT-4](https://platform.openai.com/docs)
-- [simple-git](https://github.com/steveukx/git-js)
-- [octokit/rest.js](https://github.com/octokit/rest.js)
-- [chalk](https://github.com/chalk/chalk)
-- Your rage at poorly written commit messages
+- 🔀 Branch naming assistant (git-chimp name or git-chimp branch)
+- 🧪 Dry run support (--dry-run)
+- 🍿 Emoji support and improved Conventional Commit modes
+- 🤖 Smarter PR and commit message generation with AI tuning
+- ⚙️ Plugin system for custom formatters and AI prompts
 
 ---
 
 ## 🐛 Contributing
 
-Issues, feature requests, PRs, and monkey memes all welcome. Open a PR or start a discussion.
+Feature requests, bug reports, and “this sucks” feedback all welcome. Start an issue or throw a PR.
+
+Want to add your own AI model or custom formatter? Stay tuned for plugin support.
 
 ---
 
 ## ⚖️ License
 
-MIT. Use it, abuse it, just don’t sell it back to me on Fiverr.
+MIT. You break it, you bought it. Just kidding. But seriously, don’t blame the monkeys.
 
 ---
 
 ## 🐵 Parting Wisdom
 
-> “Let the monkey write the messages. You’ve got bigger bugs to squash.”
-> _– Ancient Git Proverb_
+> "Let the monkey write the messages. You’ve got bigger bugs to squash."
+>
+> — Ancient Git Proverb

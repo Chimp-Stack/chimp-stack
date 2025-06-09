@@ -62,6 +62,17 @@ Then you'll be walked through a few simple questions to generate the correct con
 
 Some fields (like `openaiApiKey`) are only written to global config for security and reusability.
 
+### Get your API keys:
+
+- 🧠 OpenAI: https://platform.openai.com/account/api-keys
+- 🐙 GitHub Token: https://github.com/settings/tokens _(Requires repo scope)_
+
+---
+
+## 🛠 Configuration
+
+`doc-chimp` supports configuration via the `docChimp` namespace in a `.chimprc` file at the root of your repo. This should be a plain JSON file (no .json extension).
+
 ### Example `.chimprc`
 
 ```json
