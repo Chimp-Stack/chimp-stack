@@ -4,7 +4,7 @@ import { writeChimpConfig } from '../config';
 
 export function addChimpInitCommand(
   program: Command,
-  scope: 'gitChimp' | 'docChimp'
+  scope: 'gitChimp' | 'docChimp' | 'releaseChimp'
 ) {
   const initCommand = new Command('init')
     .description(`Create or update .chimprc config for ${scope}`)
