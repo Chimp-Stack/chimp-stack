@@ -8,14 +8,14 @@ import {
 import path from 'path';
 
 const existsSync = jest.fn();
+const readFileSync = jest.fn();
 const writeFileSync = jest.fn();
-const appendFileSync = jest.fn();
 
 jest.unstable_mockModule('node:fs', () => ({
   default: {
     existsSync,
+    readFileSync,
     writeFileSync,
-    appendFileSync,
   },
 }));
 
@@ -45,19 +45,23 @@ describe('writeChangelog', () => {
 
     expect(writeFileSync).toHaveBeenCalledWith(
       mockPath,
-      expect.stringContaining('## [1.2.3]')
+      expect.stringContaining('## [1.2.3]'),
+      'utf-8'
     );
   });
 
-  test('appends to existing changelog', () => {
+  test('prepends to existing changelog', () => {
     existsSync.mockReturnValue(true);
-    appendFileSync.mockImplementation(() => {});
+    readFileSync.mockReturnValue('# Changelog\n\nExisting content\n');
+    writeFileSync.mockImplementation(() => {});
 
     writeChangelog('1.2.3');
 
-    expect(appendFileSync).toHaveBeenCalledWith(
+    expect(readFileSync).toHaveBeenCalledWith(mockPath, 'utf-8');
+    expect(writeFileSync).toHaveBeenCalledWith(
       mockPath,
-      expect.stringContaining('## [1.2.3]')
+      expect.stringContaining('## [1.2.3]'),
+      'utf-8'
     );
   });
 });
