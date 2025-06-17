@@ -23,7 +23,13 @@ export function runCLI() {
   program
     .command('bump <part>')
     .description('Bump version: patch, minor, or major')
-    .option('--dry-run', 'Preview without writing or committing')
+    .option(
+      '--dry-run',
+      'Preview changes without writing files or committing'
+    )
+    .option('--no-package-json', 'Skip updating package.json version')
+    .option('--no-changelog', 'Skip generating and writing changelog')
+    .option('--no-git', 'Skip git commit, tag, and push')
     .action(handleBump);
 
   program.parse(process.argv);
