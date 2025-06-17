@@ -1,6 +1,9 @@
 import type { Command } from 'commander';
 import { getCurrentVersion, bumpVersion } from '../utils/version.js';
-import { updateChangelog } from '../utils/changelog.js';
+import {
+  generateChangelog,
+  writeChangelog,
+} from '../utils/changelog.js';
 import { gitCommitTagPush } from '../utils/git.js';
 
 export async function handleBump(
@@ -11,7 +14,7 @@ export async function handleBump(
 
   if (!validParts.includes(part as any)) {
     console.error(
-      `Invalid bump type: ${part}. Must be one of: ${validParts.join(', ')}`
+      `❌ Invalid bump type: '${part}'. Must be one of: ${validParts.join(', ')}`
     );
     process.exit(1);
   }
@@ -22,11 +25,16 @@ export async function handleBump(
   console.log(`🐵 Current version: ${current}`);
   console.log(`🍌 Next version:    ${next}`);
 
-  updateChangelog(next);
+  const changelog = generateChangelog(next);
 
   if (options.dryRun) {
-    console.log('🧪 Dry run: no changes written to git.');
+    console.log('\n🔍 [Dry Run] Generated changelog:\n');
+    console.log(changelog);
+    console.log(
+      '\n✅ Dry run complete. No files written, no git commands run.'
+    );
   } else {
+    writeChangelog(next);
     gitCommitTagPush(next);
     console.log(`🚀 Released version ${next} and pushed to remote.`);
   }

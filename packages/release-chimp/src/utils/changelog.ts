@@ -1,20 +1,20 @@
 import fs from 'fs';
 import path from 'path';
 
-export function updateChangelog(newVersion: string) {
-  const changelogPath = path.resolve(process.cwd(), 'CHANGELOG.md');
+export function generateChangelog(version: string): string {
   const date = new Date().toISOString().split('T')[0];
+  return `\n## [${version}] - ${date}\n\n- Placeholder for actual changes. Go bananas.\n`;
+}
 
-  const newEntry = `\n## [${newVersion}] - ${date}\n\n- Placeholder for actual changes. Go bananas.\n`;
+export function writeChangelog(version: string) {
+  const changelogPath = path.resolve(process.cwd(), 'CHANGELOG.md');
+  const newEntry = generateChangelog(version);
 
   if (!fs.existsSync(changelogPath)) {
-    const initial = `# Changelog\n${newEntry}`;
-    fs.writeFileSync(changelogPath, initial);
+    fs.writeFileSync(changelogPath, `# Changelog\n${newEntry}`);
     console.log('📝 Created new CHANGELOG.md');
   } else {
-    const existing = fs.readFileSync(changelogPath, 'utf8');
-    const updated = existing + newEntry;
-    fs.writeFileSync(changelogPath, updated);
+    fs.appendFileSync(changelogPath, newEntry);
     console.log('📝 Updated CHANGELOG.md');
   }
 }
