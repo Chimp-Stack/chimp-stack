@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.1] - 2025-06-17
+
+### Added
+- add options to skip updating package.json, changelog, or git commands (501a1a9)
+
 ## [0.1.0] - 2025-06-17
 
 ### Tests
