@@ -25,16 +25,16 @@ export async function handleBump(
   console.log(`🐵 Current version: ${current}`);
   console.log(`🍌 Next version:    ${next}`);
 
-  const changelog = generateChangelog(next);
-
   if (options.dryRun) {
+    // Just generate and print changelog, no file write
+    const changelog = generateChangelog(next);
     console.log('\n🔍 [Dry Run] Generated changelog:\n');
     console.log(changelog);
     console.log(
       '\n✅ Dry run complete. No files written, no git commands run.'
     );
   } else {
-    writeChangelog(next);
+    writeChangelog(next); // write with newSection generated inside
     gitCommitTagPush(next);
     console.log(`🚀 Released version ${next} and pushed to remote.`);
   }
