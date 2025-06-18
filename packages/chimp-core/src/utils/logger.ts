@@ -1,26 +1,26 @@
 import { getChalk } from 'src/utils/getChalk';
 
-export async function logInfo(msg: string) {
+export async function logInfo(msg: string, prefix = '[chimp] ') {
   const chalk = await getChalk();
-  console.log(chalk.blue(`[chimp] ${msg}`));
+  console.log(chalk.blue(`${prefix}${msg}`));
 }
 
-export async function logSuccess(msg: string) {
+export async function logSuccess(msg: string, prefix = '[chimp] ') {
   const chalk = await getChalk();
-  console.log(chalk.green(`[chimp] ${msg}`));
+  console.log(chalk.green(`${prefix}${msg}`));
 }
 
-export async function logWarn(msg: string) {
+export async function logWarn(msg: string, prefix = '[chimp] ') {
   const chalk = await getChalk();
-  console.log(chalk.yellow(`[chimp] ${msg}`));
+  console.log(chalk.yellow(`${prefix}${msg}`));
 }
 
-export async function logError(msg: string) {
+export async function logError(msg: string, prefix = '[chimp] ') {
   const chalk = await getChalk();
-  console.error(chalk.red(`[chimp] ${msg}`));
+  console.error(chalk.red(`${prefix}${msg}`));
 }
 
-export async function logMuted(msg: string) {
+export async function logMuted(msg: string, prefix = '[chimp] ') {
   const chalk = await getChalk();
-  console.log(chalk.gray(`[chimp] ${msg}`));
+  console.log(chalk.gray(`${prefix}${msg}`));
 }
