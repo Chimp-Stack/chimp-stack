@@ -33,18 +33,11 @@ export type DocChimpConfig = ChimpConfig & {
 
 export type ReleaseChimpConfig = ChimpConfig & {
   bumpType?: 'major' | 'minor' | 'patch';
+  tagFormat?: string;
   changelog?: {
+    path?: string; // Default: 'CHANGELOG.md'
     useAI?: boolean;
     groupOrder?: string[];
-  };
-  git?: {
-    commitMessage?: string;
-    tagPrefix?: string;
-    pushRemote?: string;
-  };
-  packageJson?: {
-    update?: boolean;
-    path?: string;
   };
   dryRun?: boolean;
   noPackageJson?: boolean;
