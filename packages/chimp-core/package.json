@@ -22,6 +22,7 @@
     "typescript": "^5.4.0"
   },
   "dependencies": {
+    "@inquirer/prompts": "^7.5.3",
     "chalk": "^5.4.1",
     "commander": "^14.0.0",
     "inquirer": "^12.6.3"
