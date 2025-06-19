@@ -35,6 +35,14 @@
       "import": "./dist/cli/init.js",
       "require": "./dist/cli/init.js"
     },
+    "./cli/changelog": {
+      "import": "./dist/cli/changelog.js",
+      "require": "./dist/cli/changelog.js"
+    },
+    "./cli": {
+      "import": "./dist/cli/index.js",
+      "require": "./dist/cli/index.js"
+    },
     "./utils/changelog": {
       "import": "./dist/utils/changelog.js",
       "require": "./dist/utils/changelog.js"
@@ -60,7 +68,7 @@
     "url": "https://github.com/Chimp-Stack/chimp-stack.git"
   },
   "scripts": {
-    "build": "tsup src/**/*.ts --dts --out-dir dist"
+    "build": "tsup src/index.ts src/**/*.ts --dts --out-dir dist"
   },
   "devDependencies": {
     "@types/node": "^22.15.29",

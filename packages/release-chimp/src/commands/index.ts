@@ -2,7 +2,8 @@ import { Command } from 'commander';
 import {
   addChimpConfigCommand,
   addChimpInitCommand,
-} from '@chimp-stack/core';
+  addChangelogCommand,
+} from '@chimp-stack/core/cli';
 import { handleBump } from './bump.js';
 
 const version = __VERSION__;
@@ -19,6 +20,7 @@ export function runCLI() {
 
   addChimpInitCommand(program, 'releaseChimp');
   addChimpConfigCommand(program, 'releaseChimp');
+  addChangelogCommand(program, 'releaseChimp');
 
   program
     .command('bump <part>')

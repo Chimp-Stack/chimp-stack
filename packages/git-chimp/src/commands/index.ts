@@ -1,11 +1,11 @@
 import { Command } from 'commander';
 import { handleCommitCommand } from './commit.js';
 import { handlePR } from './pr.js';
-import { handleChangelog } from './changelog.js';
 import {
   addChimpConfigCommand,
   addChimpInitCommand,
-} from '@chimp-stack/core';
+  addChangelogCommand,
+} from '@chimp-stack/core/cli';
 
 const version = __VERSION__;
 const program = new Command();
@@ -20,6 +20,7 @@ export function runCLI() {
 
   addChimpInitCommand(program, 'gitChimp');
   addChimpConfigCommand(program, 'gitChimp');
+  addChangelogCommand(program, 'gitChimp');
 
   program
     .command('commit')
@@ -78,21 +79,6 @@ export function runCLI() {
       'Generate a pull request with GPT based on recent commits'
     )
     .action(handlePR);
-
-  program
-    .command('changelog')
-    .alias('cl')
-    .description(
-      'Generate a changelog based on semantic commit messages'
-    )
-    .option('--from <tag>', 'Start tag or commit')
-    .option('--to <tag>', 'End tag or commit (default: HEAD)')
-    .option(
-      '--output <file>',
-      'Output changelog to file (will append if file exists)'
-    )
-    .option('--ai', 'Use AI to generate a summary')
-    .action(handleChangelog);
 
   program.parse(process.argv);
 }
