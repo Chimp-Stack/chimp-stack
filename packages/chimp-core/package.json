@@ -43,6 +43,10 @@
       "import": "./dist/cli/index.js",
       "require": "./dist/cli/index.js"
     },
+    "./utils": {
+      "import": "./dist/utils/index.js",
+      "require": "./dist/utils/index.js"
+    },
     "./utils/changelog": {
       "import": "./dist/utils/changelog/index.js",
       "require": "./dist/utils/changelog/index.js"
@@ -54,10 +58,6 @@
     "./utils/openai": {
       "import": "./dist/utils/openai.js",
       "require": "./dist/utils/openai.js"
-    },
-    "./utils": {
-      "import": "./dist/utils/index.js",
-      "require": "./dist/utils/index.js"
     }
   },
   "publishConfig": {

@@ -20,6 +20,8 @@
       "@chimp-stack/core/cli/addChimpConfigCommand": ["packages/chimp-core/src/cli/addChimpConfigCommand.ts"],
       "@chimp-stack/core/cli/config": ["packages/chimp-core/src/cli/config.ts"],
       "@chimp-stack/core/cli/init": ["packages/chimp-core/src/cli/init.ts"],
+      "@chimp-stack/core/utils": ["packages/chimp-core/src/utils/index.ts"],
+      "@chimp-stack/core/utils/*": ["packages/chimp-core/src/utils/*"],
       "@chimp-stack/core/utils/changelog": ["packages/chimp-core/src/utils/changelog/index.ts"],
       "@chimp-stack/core/utils/logger": ["packages/chimp-core/src/utils/logger.ts"],
       "@chimp-stack/core/utils/openai": ["packages/chimp-core/src/utils/openai.ts"]
