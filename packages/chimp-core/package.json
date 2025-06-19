@@ -11,18 +11,6 @@
       "import": "./dist/index.js",
       "require": "./dist/index.js"
     },
-    "./cli/addChimpConfigCommand": {
-      "import": "./dist/cli/addChimpConfigCommand.js",
-      "require": "./dist/cli/addChimpConfigCommand.js"
-    },
-    "./cli/config": {
-      "import": "./dist/cli/config.js",
-      "require": "./dist/cli/config.js"
-    },
-    "./cli/init": {
-      "import": "./dist/cli/init.js",
-      "require": "./dist/cli/init.js"
-    },
     "./config": {
       "import": "./dist/config.js",
       "require": "./dist/config.js"
@@ -35,6 +23,18 @@
       "import": "./dist/types/config.js",
       "require": "./dist/types/config.js"
     },
+    "./cli/addChimpConfigCommand": {
+      "import": "./dist/cli/addChimpConfigCommand.js",
+      "require": "./dist/cli/addChimpConfigCommand.js"
+    },
+    "./cli/config": {
+      "import": "./dist/cli/config.js",
+      "require": "./dist/cli/config.js"
+    },
+    "./cli/init": {
+      "import": "./dist/cli/init.js",
+      "require": "./dist/cli/init.js"
+    },
     "./utils/changelog": {
       "import": "./dist/utils/changelog.js",
       "require": "./dist/utils/changelog.js"
@@ -46,11 +46,11 @@
     "./utils/openai": {
       "import": "./dist/utils/openai.js",
       "require": "./dist/utils/openai.js"
+    },
+    "./utils": {
+      "import": "./dist/utils/index.js",
+      "require": "./dist/utils/index.js"
     }
-  },
-  "paths": {
-    "@chimp-stack/core": ["src/index.ts"],
-    "@chimp-stack/core/*": ["src/*"]
   },
   "publishConfig": {
     "access": "public"
@@ -60,7 +60,7 @@
     "url": "https://github.com/Chimp-Stack/chimp-stack.git"
   },
   "scripts": {
-    "build": "tsup src/index.ts --dts --out-dir dist"
+    "build": "tsup src/**/*.ts --dts --out-dir dist"
   },
   "devDependencies": {
     "@types/node": "^22.15.29",

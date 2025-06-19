@@ -4,7 +4,7 @@ import type {
   GitChimpConfig,
   ReleaseChimpConfig,
 } from '../types/config.js';
-import { generateChangelogEntries } from '../utils/openai.js';
+import { generateChangelogEntries } from './openai.js';
 import { loadChimpConfig } from 'src/config.js';
 
 type ChangelogConfig = GitChimpConfig | ReleaseChimpConfig;
