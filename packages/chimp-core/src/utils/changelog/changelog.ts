@@ -3,9 +3,9 @@ import type { DefaultLogFields, ListLogLine } from 'simple-git';
 import type {
   GitChimpConfig,
   ReleaseChimpConfig,
-} from '../types/config.js';
-import { generateChangelogEntries } from './openai.js';
-import { loadChimpConfig } from 'src/config.js';
+} from '../../types/config.js';
+import { generateChangelogEntries } from '../openai.js';
+import { loadChimpConfig } from '../../config.js';
 
 type ChangelogConfig = GitChimpConfig | ReleaseChimpConfig;
 

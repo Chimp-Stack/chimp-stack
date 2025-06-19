@@ -4,6 +4,7 @@ import {
   generateSemanticChangelog,
   logError,
   logSuccess,
+  writeChangelogToFile,
 } from '../utils';
 
 export function addChangelogCommand(
@@ -46,14 +47,10 @@ export function addChangelogCommand(
         if (output) {
           const outputPath = process.cwd() + '/' + output;
           try {
-            await import('fs').then((fs) =>
-              fs.appendFileSync(outputPath, changelog)
-            );
+            writeChangelogToFile(changelog, outputPath);
             logSuccess(`✅ Changelog written to ${outputPath}`);
-          } catch (err) {
-            logError(
-              `❌ Failed to write changelog to ${outputPath}: ${err}`
-            );
+          } catch (_) {
+            process.exit(1);
           }
         } else {
           console.log(changelog);

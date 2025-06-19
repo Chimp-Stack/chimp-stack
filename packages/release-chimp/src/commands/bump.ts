@@ -3,9 +3,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { getCurrentVersion, bumpVersion } from '../utils/version.js';
 import {
-  generateChangelog,
-  writeChangelog,
-} from '../utils/changelog.js';
+  generateSemanticChangelog,
+  writeChangelogToFile,
+} from '@chimp-stack/core/utils/changelog';
 import { gitCommitTagPush } from '../utils/git.js';
 
 export async function handleBump(
@@ -35,7 +35,12 @@ export async function handleBump(
   if (options.dryRun) {
     const changelog = options.noChangelog
       ? '_Changelog generation skipped (dry run)._'
-      : generateChangelog(next);
+      : await generateSemanticChangelog({
+          from: current,
+          to: 'HEAD',
+          toolName: 'releaseChimp',
+          useAI: true,
+        });
 
     console.log('\n🔍 [Dry Run] Preview:\n');
     if (!options.noPackageJson) {
@@ -83,8 +88,20 @@ export async function handleBump(
 
   // Generate and write changelog unless opted out
   if (!options.noChangelog) {
-    writeChangelog(next);
-    console.log('📝 Changelog updated');
+    const changelog = await generateSemanticChangelog({
+      from: current,
+      to: 'HEAD',
+      toolName: 'releaseChimp',
+      useAI: true,
+    });
+
+    try {
+      writeChangelogToFile(changelog);
+      console.log('📝 Changelog updated');
+    } catch (error) {
+      console.error(`❌ Failed to write changelog`);
+      process.exit(1);
+    }
   } else {
     console.log('📝 Skipping changelog update');
   }
