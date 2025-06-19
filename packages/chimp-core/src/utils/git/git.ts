@@ -68,12 +68,12 @@ export async function detectCurrentVersion({
 }
 
 // Helper to convert a tagFormat like '%name@v%' into a regex
-function tagFormatToRegex(format: string): RegExp {
+export function tagFormatToRegex(format: string): RegExp {
   const regexString = format
-    .replace('%name', '.+')
-    .replace('%', '\\d+')
+    .replace(/\$\{name\}/g, '.+')
+    .replace(/\$\{version\}/g, '\\d+\\.\\d+\\.\\d+')
     .replace(/\./g, '\\.');
-  return new RegExp(regexString);
+  return new RegExp(`^${regexString}$`);
 }
 
 function escapeRegex(str: string): string {

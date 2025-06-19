@@ -135,7 +135,7 @@ export async function handleBump(
 
   // Commit, tag, and push unless opted out
   if (!noGit) {
-    gitCommitTagPush(next);
+    gitCommitTagPush(next, { tagFormat: config.tagFormat });
     console.log(`🚀 Released version ${next} and pushed to remote.`);
   } else {
     console.log('🚀 Skipping git commit, tag, and push');
