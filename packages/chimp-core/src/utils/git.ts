@@ -79,3 +79,11 @@ function tagFormatToRegex(format: string): RegExp {
 function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
+
+export function extractVersionFromTag(tag: string): string {
+  const match = tag.match(/(\d+\.\d+\.\d+)$/);
+  if (!match) {
+    throw new Error(`Could not extract version from tag: ${tag}`);
+  }
+  return match[1];
+}

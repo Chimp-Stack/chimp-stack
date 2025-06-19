@@ -7,7 +7,10 @@ import {
   writeChangelogToFile,
 } from '@chimp-stack/core/utils/changelog';
 import { gitCommitTagPush } from '../utils/git.js';
-import { detectCurrentVersion } from '@chimp-stack/core/utils';
+import {
+  detectCurrentVersion,
+  extractVersionFromTag,
+} from '@chimp-stack/core/utils';
 import {
   loadChimpConfig,
   ReleaseChimpConfig,
@@ -50,7 +53,8 @@ export async function handleBump(
     tagFormat: config.tagFormat,
   });
 
-  const next = bumpVersion(current, part as any);
+  const rawVersion = extractVersionFromTag(current);
+  const next = bumpVersion(rawVersion, part as any);
 
   console.log(`🐵 Current version: ${current}`);
   console.log(`🍌 Next version:    ${next}`);
