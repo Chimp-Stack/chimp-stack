@@ -68,12 +68,14 @@
     "url": "https://github.com/Chimp-Stack/chimp-stack.git"
   },
   "scripts": {
-    "build": "tsup src/index.ts src/**/*.ts --dts --out-dir dist"
+    "build": "tsup src/index.ts src/**/*.ts --dts --out-dir dist",
+    "test": "vitest"
   },
   "devDependencies": {
     "@types/node": "^22.15.29",
     "tsup": "^8.5.0",
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@inquirer/prompts": "^7.5.3",

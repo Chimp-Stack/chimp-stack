@@ -26,9 +26,9 @@
   "author": "Mark Rabey <mark@markrabey.com> (http://markrabey.com/)",
   "description": "",
   "dependencies": {
+    "@chimp-stack/core": "*",
     "@types/node": "^22.15.29",
     "chalk": "^5.4.1",
-    "@chimp-stack/core": "*",
     "commander": "^14.0.0",
     "comment-parser": "^1.4.1",
     "fast-glob": "^3.3.3",
@@ -41,7 +41,7 @@
     "@types/jest": "^29.5.14",
     "conventional-changelog-conventionalcommits": "^9.0.0",
     "jest": "^29.7.0",
-    "ts-jest": "^29.3.4",
+    "ts-jest": "^29.4.0",
     "tsup": "^8.5.0"
   }
 }
