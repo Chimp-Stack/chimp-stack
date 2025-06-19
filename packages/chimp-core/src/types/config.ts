@@ -30,3 +30,17 @@ export type DocChimpConfig = ChimpConfig & {
   prSummary: boolean;
   toc: boolean;
 };
+
+export type ReleaseChimpConfig = ChimpConfig & {
+  bumpType?: 'major' | 'minor' | 'patch';
+  tagFormat?: string;
+  changelog?: {
+    path?: string; // Default: 'CHANGELOG.md'
+    useAI?: boolean;
+    groupOrder?: string[];
+  };
+  dryRun?: boolean;
+  noPackageJson?: boolean;
+  noChangelog?: boolean;
+  noGit?: boolean;
+};

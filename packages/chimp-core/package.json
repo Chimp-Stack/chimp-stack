@@ -6,6 +6,64 @@
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./config": {
+      "import": "./dist/config.js",
+      "require": "./dist/config.js"
+    },
+    "./env": {
+      "import": "./dist/env.js",
+      "require": "./dist/env.js"
+    },
+    "./types/config": {
+      "import": "./dist/types/config.js",
+      "require": "./dist/types/config.js"
+    },
+    "./cli/addChimpConfigCommand": {
+      "import": "./dist/cli/addChimpConfigCommand.js",
+      "require": "./dist/cli/addChimpConfigCommand.js"
+    },
+    "./cli/config": {
+      "import": "./dist/cli/config.js",
+      "require": "./dist/cli/config.js"
+    },
+    "./cli/init": {
+      "import": "./dist/cli/init.js",
+      "require": "./dist/cli/init.js"
+    },
+    "./cli/changelog": {
+      "import": "./dist/cli/changelog.js",
+      "require": "./dist/cli/changelog.js"
+    },
+    "./cli": {
+      "import": "./dist/cli/index.js",
+      "require": "./dist/cli/index.js"
+    },
+    "./utils": {
+      "import": "./dist/utils/index.js",
+      "require": "./dist/utils/index.js"
+    },
+    "./utils/changelog": {
+      "import": "./dist/utils/changelog/index.js",
+      "require": "./dist/utils/changelog/index.js"
+    },
+    "./utils/git": {
+      "import": "./dist/utils/git/index.js",
+      "require": "./dist/utils/git/index.js"
+    },
+    "./utils/logger": {
+      "import": "./dist/utils/logger.js",
+      "require": "./dist/utils/logger.js"
+    },
+    "./utils/openai": {
+      "import": "./dist/utils/openai.js",
+      "require": "./dist/utils/openai.js"
+    }
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -14,14 +72,17 @@
     "url": "https://github.com/Chimp-Stack/chimp-stack.git"
   },
   "scripts": {
-    "build": "tsup src/index.ts --dts --out-dir dist"
+    "build": "tsup",
+    "test": "vitest"
   },
   "devDependencies": {
     "@types/node": "^22.15.29",
     "tsup": "^8.5.0",
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
+    "@inquirer/prompts": "^7.5.3",
     "chalk": "^5.4.1",
     "commander": "^14.0.0",
     "inquirer": "^12.6.3"

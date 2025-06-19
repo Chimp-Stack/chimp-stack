@@ -1,24 +1,23 @@
-import { loadChimpConfig, GitChimpConfig } from '@chimp-stack/core';
 import OpenAI from 'openai';
+import { loadChimpConfig } from '../config.js';
+import type { ChimpConfig } from '../types/config.js';
 
 let _openai: OpenAI | null = null;
 
-export function getOpenAIInstance(): OpenAI {
+export function getOpenAIInstance(tool: string = 'gitChimp'): OpenAI {
   if (!_openai) {
-    const config = loadChimpConfig('gitChimp') as GitChimpConfig;
+    const config = loadChimpConfig(tool) as ChimpConfig;
     const apiKey =
       config.openaiApiKey || process.env.OPENAI_API_KEY || '';
 
     if (!apiKey) {
       console.error(
-        '❌ Missing OpenAI API key. Please set it in your .chimprc or in the OPENAI_API_KEY environment variable.'
+        `❌ Missing OpenAI API key. Set it in your .chimprc under "${tool}" or as OPENAI_API_KEY.`
       );
       process.exit(1);
     }
 
-    _openai = new OpenAI({
-      apiKey,
-    });
+    _openai = new OpenAI({ apiKey });
   }
 
   return _openai;
@@ -30,9 +29,10 @@ export async function generateCommitMessages(
   enforceConventionalCommits = false,
   tone?: string,
   model = 'gpt-3.5-turbo',
-  scope?: string
+  scope?: string,
+  tool = 'gitChimp'
 ): Promise<string[]> {
-  const openai = getOpenAIInstance();
+  const openai = getOpenAIInstance(tool);
 
   const scopeInstruction = scope
     ? ` Use the scope "${scope}" in the commit messages (format: type(${scope}): description).`
@@ -55,7 +55,7 @@ Respond with ${count} different commit message options, each on its own line.
 Messages should be short, use present tense.${enforceConventionalCommits ? ' They MUST follow Conventional Commit style.' : ''}${toneDescription}
 `;
 
-  const completion = await openai.chat.completions.create({
+  const res = await openai.chat.completions.create({
     model,
     messages: [
       { role: 'system', content: systemPrompt },
@@ -63,9 +63,8 @@ Messages should be short, use present tense.${enforceConventionalCommits ? ' The
     ],
   });
 
-  const raw = completion.choices[0].message.content?.trim() || '';
-  const lines = raw.split('\n').filter((line) => line.trim() !== '');
-  return lines.slice(0, count);
+  const raw = res.choices[0].message.content?.trim() || '';
+  return raw.split('\n').filter(Boolean).slice(0, count);
 }
 
 export async function generatePullRequestTitle(
@@ -73,20 +72,17 @@ export async function generatePullRequestTitle(
   currentBranch?: string,
   enforceSemanticPrTitles = false,
   tone?: string,
-  model = 'gpt-3.5-turbo'
+  model = 'gpt-3.5-turbo',
+  tool = 'gitChimp'
 ): Promise<string> {
-  const openai = getOpenAIInstance();
+  const openai = getOpenAIInstance(tool);
 
   const systemPrompt = enforceSemanticPrTitles
-    ? `You are an assistant that strictly generates semantic PR titles following the Conventional Commits format. The title must be a single line in Conventional Commits format.`
+    ? `You are an assistant that strictly generates semantic PR titles following the Conventional Commits format.`
     : `You are an assistant that generates clear and useful PR titles.`;
 
-  const toneDescription =
-    !enforceSemanticPrTitles && tone ? ` with a ${tone} tone` : '';
-
-  const branchMessage = currentBranch
-    ? `Branch: ${currentBranch}`
-    : '';
+  const toneDescription = tone ? ` with a ${tone} tone` : '';
+  const branchInfo = currentBranch ? `Branch: ${currentBranch}` : '';
 
   const userPrompt = `
 Here is a git diff. Generate a PR title (one line) based on the changes.
@@ -97,7 +93,7 @@ ${toneDescription}
 Git diff:
 ${diff}
 
-${branchMessage}
+${branchInfo}
 `;
 
   const res = await openai.chat.completions.create({
@@ -118,12 +114,12 @@ ${branchMessage}
 export async function generatePullRequestDescription(
   diff: string,
   tone?: string,
-  model = 'gpt-3.5-turbo'
+  model = 'gpt-3.5-turbo',
+  tool = 'gitChimp'
 ): Promise<string> {
-  const openai = getOpenAIInstance();
+  const openai = getOpenAIInstance(tool);
 
   const systemPrompt = `You are an assistant that writes professional and helpful pull request descriptions.`;
-
   const toneDescription = tone ? ` with a ${tone} tone` : '';
 
   const userPrompt = `
@@ -133,7 +129,7 @@ ${diff}
 Include a brief summary of the changes, mention any important context, and highlight anything reviewers should pay attention to. Use markdown formatting and keep it concise.${toneDescription}
 `;
 
-  const completion = await openai.chat.completions.create({
+  const res = await openai.chat.completions.create({
     model,
     messages: [
       { role: 'system', content: systemPrompt },
@@ -142,7 +138,7 @@ Include a brief summary of the changes, mention any important context, and highl
   });
 
   return (
-    completion.choices[0].message.content?.trim() ||
+    res.choices[0].message.content?.trim() ||
     'This PR contains general updates and improvements.'
   );
 }
@@ -150,13 +146,14 @@ Include a brief summary of the changes, mention any important context, and highl
 export async function generateChangelogEntries(
   commits: { message: string }[],
   tone = 'concise',
-  model = 'gpt-4'
+  model = 'gpt-4',
+  tool = 'releaseChimp'
 ): Promise<string> {
-  const openai = getOpenAIInstance();
-
-  const systemPrompt = `You are a release manager. You write professional changelog entries.`;
+  const openai = getOpenAIInstance(tool);
 
   const messages = commits.map((c) => `- ${c.message}`).join('\n');
+
+  const systemPrompt = `You are a release manager. You write professional changelog entries.`;
 
   const userPrompt = `
 Given these commit messages, summarize the changes and write a professional changelog summary in a ${tone} tone:
@@ -164,7 +161,7 @@ Given these commit messages, summarize the changes and write a professional chan
 ${messages}
 `;
 
-  const response = await openai.chat.completions.create({
+  const res = await openai.chat.completions.create({
     model,
     messages: [
       { role: 'system', content: systemPrompt },
@@ -172,5 +169,5 @@ ${messages}
     ],
   });
 
-  return response.choices[0].message.content ?? '';
+  return res.choices[0].message.content?.trim() || '';
 }

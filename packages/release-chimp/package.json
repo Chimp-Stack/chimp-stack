@@ -1,0 +1,47 @@
+{
+  "name": "@chimp-stack/release-chimp",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "release-chimp": "./dist/cli.js"
+  },
+  "main": "./dist/cli.js",
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chimp-Stack/chimp-stack.git"
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "tsup src/cli.ts --dts --format esm --out-dir dist",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
+  },
+  "keywords": [],
+  "author": "Mark Rabey <mark@markrabey.com> (http://markrabey.com/)",
+  "description": "",
+  "dependencies": {
+    "@chimp-stack/core": "*",
+    "@types/node": "^22.15.29",
+    "chalk": "^5.4.1",
+    "commander": "^14.0.0",
+    "comment-parser": "^1.4.1",
+    "fast-glob": "^3.3.3",
+    "globby": "^14.1.0",
+    "simple-git": "^3.27.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "conventional-changelog-conventionalcommits": "^9.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.0",
+    "tsup": "^8.5.0"
+  }
+}
