@@ -1,7 +1,7 @@
 import { simpleGit } from 'simple-git';
 import fs from 'fs';
 import type { DefaultLogFields, ListLogLine } from 'simple-git';
-import { generateChangelogEntries } from '../lib/openai.js'; // New helper
+import { generateChangelogEntries } from '@chimp-stack/core/utils/openai';
 import {
   GitChimpConfig,
   loadChimpConfig,

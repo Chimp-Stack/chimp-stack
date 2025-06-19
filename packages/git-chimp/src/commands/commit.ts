@@ -1,4 +1,4 @@
-import { generateCommitMessages } from '../lib/openai.js';
+import { generateCommitMessages } from '@chimp-stack/core/utils/openai';
 import { simpleGit } from 'simple-git';
 import inquirer from 'inquirer';
 import { cleanCommitMessages } from '../utils/format.js';

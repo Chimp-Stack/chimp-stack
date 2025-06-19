@@ -4,7 +4,7 @@ import { Octokit } from '@octokit/rest';
 import {
   generatePullRequestDescription,
   generatePullRequestTitle,
-} from '../lib/openai.js';
+} from '@chimp-stack/core/utils/openai';
 import readline from 'readline';
 import { validatePrTitle } from '../utils/git.js';
 import {
