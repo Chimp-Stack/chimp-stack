@@ -20,6 +20,7 @@ jobs:
           - chimp-core
           - git-chimp
           - doc-chimp
+          - release-chimp
 
     steps:
       - uses: actions/checkout@v4
