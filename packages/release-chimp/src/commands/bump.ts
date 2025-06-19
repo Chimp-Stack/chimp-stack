@@ -1,22 +1,39 @@
 import type { Command } from 'commander';
 import fs from 'node:fs';
 import path from 'node:path';
-import { getCurrentVersion, bumpVersion } from '../utils/version.js';
+import { bumpVersion } from '../utils/version.js';
 import {
   generateSemanticChangelog,
   writeChangelogToFile,
 } from '@chimp-stack/core/utils/changelog';
 import { gitCommitTagPush } from '../utils/git.js';
+import { detectCurrentVersion } from '@chimp-stack/core/utils';
+import {
+  loadChimpConfig,
+  ReleaseChimpConfig,
+} from '@chimp-stack/core';
 
 export async function handleBump(
-  part: string,
-  options: Command & {
+  cliPart: string,
+  cliOptions: Command & {
     dryRun?: boolean;
     noPackageJson?: boolean;
     noChangelog?: boolean;
     noGit?: boolean;
   }
 ) {
+  const config = loadChimpConfig(
+    'releaseChimp'
+  ) as ReleaseChimpConfig;
+
+  const part = cliPart || config.bumpType || 'patch';
+  const dryRun = cliOptions.dryRun ?? config.dryRun ?? false;
+  const noPackageJson =
+    cliOptions.noPackageJson ?? config.noPackageJson ?? false;
+  const noChangelog =
+    cliOptions.noChangelog ?? config.noChangelog ?? false;
+  const noGit = cliOptions.noGit ?? config.noGit ?? false;
+
   const validParts = ['major', 'minor', 'patch'] as const;
 
   if (!validParts.includes(part as any)) {
@@ -26,30 +43,33 @@ export async function handleBump(
     process.exit(1);
   }
 
-  const current = getCurrentVersion() ?? '0.0.0';
+  const { version: current, isGitRef } = await detectCurrentVersion({
+    tagFormat: config.tagFormat,
+  });
+
   const next = bumpVersion(current, part as any);
 
   console.log(`🐵 Current version: ${current}`);
   console.log(`🍌 Next version:    ${next}`);
 
-  if (options.dryRun) {
-    const changelog = options.noChangelog
+  if (dryRun) {
+    const changelog = noChangelog
       ? '_Changelog generation skipped (dry run)._'
       : await generateSemanticChangelog({
-          from: current,
+          from: isGitRef ? current : undefined,
           to: 'HEAD',
           toolName: 'releaseChimp',
           useAI: true,
         });
 
     console.log('\n🔍 [Dry Run] Preview:\n');
-    if (!options.noPackageJson) {
+    if (!noPackageJson) {
       console.log(`📦 Would update package.json version to ${next}`);
     } else {
       console.log('📦 Skipping package.json update');
     }
     console.log(changelog);
-    if (!options.noGit) {
+    if (!noGit) {
       console.log(`🔧 Would commit, tag, and push version ${next}`);
     } else {
       console.log('🔧 Skipping git commit/tag/push');
@@ -61,7 +81,7 @@ export async function handleBump(
   }
 
   // Write package.json version bump unless opted out
-  if (!options.noPackageJson) {
+  if (!noPackageJson) {
     const packageJsonPath = path.resolve(
       process.cwd(),
       'package.json'
@@ -87,9 +107,9 @@ export async function handleBump(
   }
 
   // Generate and write changelog unless opted out
-  if (!options.noChangelog) {
+  if (!noChangelog) {
     const changelog = await generateSemanticChangelog({
-      from: current,
+      from: isGitRef ? current : undefined,
       to: 'HEAD',
       toolName: 'releaseChimp',
       useAI: true,
@@ -107,7 +127,7 @@ export async function handleBump(
   }
 
   // Commit, tag, and push unless opted out
-  if (!options.noGit) {
+  if (!noGit) {
     gitCommitTagPush(next);
     console.log(`🚀 Released version ${next} and pushed to remote.`);
   } else {

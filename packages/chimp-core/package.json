@@ -51,6 +51,10 @@
       "import": "./dist/utils/changelog/index.js",
       "require": "./dist/utils/changelog/index.js"
     },
+    "./utils/git": {
+      "import": "./dist/utils/git/index.js",
+      "require": "./dist/utils/git/index.js"
+    },
     "./utils/logger": {
       "import": "./dist/utils/logger.js",
       "require": "./dist/utils/logger.js"

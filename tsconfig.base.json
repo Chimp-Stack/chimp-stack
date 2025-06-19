@@ -23,6 +23,7 @@
       "@chimp-stack/core/utils": ["packages/chimp-core/src/utils/index.ts"],
       "@chimp-stack/core/utils/*": ["packages/chimp-core/src/utils/*"],
       "@chimp-stack/core/utils/changelog": ["packages/chimp-core/src/utils/changelog/index.ts"],
+      "@chimp-stack/core/utils/git": ["packages/chimp-core/src/utils/git/index.ts"],
       "@chimp-stack/core/utils/logger": ["packages/chimp-core/src/utils/logger.ts"],
       "@chimp-stack/core/utils/openai": ["packages/chimp-core/src/utils/openai.ts"]
     }

@@ -11,21 +11,48 @@ type ChangelogConfig = GitChimpConfig | ReleaseChimpConfig;
 
 export async function generateSemanticChangelog({
   from,
-  to,
+  to = 'HEAD',
   toolName,
   useAI = false,
 }: {
-  from: string;
-  to: string;
+  from?: string;
+  to?: string;
   toolName: 'gitChimp' | 'releaseChimp';
   useAI?: boolean;
 }): Promise<string> {
-  const config = (await loadChimpConfig(toolName)) as ChangelogConfig;
-
+  const config = loadChimpConfig(toolName) as ChangelogConfig;
   const git = simpleGit();
-  const log = await git.log({ from, to });
+
+  // 🕵️ Verify 'from' actually exists as a valid git ref
+  if (from) {
+    const refExists = await git
+      .raw(['rev-parse', '--verify', `${from}^{}`])
+      .then(() => true)
+      .catch(() => false);
+
+    if (!refExists) {
+      console.warn(
+        `⚠️  Git ref '${from}' not found — falling back to full history.`
+      );
+      from = undefined;
+    }
+  }
+
+  // 📜 Get git log
+  let log;
+  try {
+    log = from ? await git.log({ from, to }) : await git.log();
+  } catch (err) {
+    throw new Error(`❌ Failed to get git log: ${err}`);
+  }
+
   const commits: (DefaultLogFields & ListLogLine)[] = [...log.all];
 
+  if (commits.length === 0) {
+    return `## Changelog (${from ?? 'initial'} → ${to})\n\n_No commits found._\n`;
+  }
+
+  // 🧠 Group by type
   const semanticGroups: Record<string, string[]> = {};
 
   for (const c of commits) {
@@ -40,7 +67,7 @@ export async function generateSemanticChangelog({
     }
   }
 
-  let output = `## Changelog (${from} → ${to})\n\n`;
+  let output = `## Changelog (${from ?? 'initial'} → ${to})\n\n`;
 
   const groupOrder = config?.changelog?.groupOrder || [
     'feat',
@@ -62,14 +89,14 @@ export async function generateSemanticChangelog({
     }
   }
 
-  if (useAI || config?.changelog?.useAI) {
+  const shouldUseAI = useAI || config?.changelog?.useAI;
+  if (shouldUseAI) {
     const aiSummary = await generateChangelogEntries(
       commits,
       config.tone,
       config.model,
       toolName
     );
-
     output = `### 🧠 Summary\n${aiSummary}\n\n` + output;
   }
 
