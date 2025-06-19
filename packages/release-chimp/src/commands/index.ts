@@ -29,6 +29,7 @@ export function runCLI() {
       '--dry-run',
       'Preview changes without writing files or committing'
     )
+    .option('--ai', 'Use AI-generated changelog summary')
     .option('--no-package-json', 'Skip updating package.json version')
     .option('--no-changelog', 'Skip generating and writing changelog')
     .option('--no-git', 'Skip git commit, tag, and push')

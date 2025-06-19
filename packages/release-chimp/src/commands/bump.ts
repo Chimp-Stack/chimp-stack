@@ -16,6 +16,7 @@ import {
 export async function handleBump(
   cliPart: string,
   cliOptions: Command & {
+    ai?: boolean;
     dryRun?: boolean;
     noPackageJson?: boolean;
     noChangelog?: boolean;
@@ -35,6 +36,8 @@ export async function handleBump(
   const noGit = cliOptions.noGit ?? config.noGit ?? false;
 
   const validParts = ['major', 'minor', 'patch'] as const;
+
+  const useAI = cliOptions.ai ?? config.changelog?.useAI ?? false;
 
   if (!validParts.includes(part as any)) {
     console.error(
@@ -59,7 +62,7 @@ export async function handleBump(
           from: isGitRef ? current : undefined,
           to: 'HEAD',
           toolName: 'releaseChimp',
-          useAI: true,
+          useAI,
         });
 
     console.log('\n🔍 [Dry Run] Preview:\n');
@@ -112,7 +115,7 @@ export async function handleBump(
       from: isGitRef ? current : undefined,
       to: 'HEAD',
       toolName: 'releaseChimp',
-      useAI: true,
+      useAI,
     });
 
     try {
