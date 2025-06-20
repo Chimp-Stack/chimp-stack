@@ -32,9 +32,9 @@ export async function handleBump(
     'releaseChimp'
   ) as ReleaseChimpConfig;
 
-  const part = cliPart || config.bumpType || 'patch';
   const dryRun = cliOptions.dryRun ?? config.dryRun ?? false;
-
+  const part = cliPart || config.bumpType || 'patch';
+  const inferVersionOnly = cliPart === undefined && !dryRun;
   const isCI = cliOptions.ci ?? false;
 
   if (isCI) {
@@ -44,15 +44,14 @@ export async function handleBump(
   }
 
   const noPackageJson =
-    isCI ||
-    (cliOptions.noPackageJson ?? config.noPackageJson ?? false);
+    cliOptions.noPackageJson ?? config.noPackageJson ?? false;
   const noChangelog =
     isCI || (cliOptions.noChangelog ?? config.noChangelog ?? false);
   const noGit = isCI || (cliOptions.noGit ?? config.noGit ?? false);
+  const useAI = cliOptions.ai ?? config.changelog?.useAI ?? false;
+  const outputFormat = cliOptions.output ?? 'text';
 
   const validParts = ['major', 'minor', 'patch'] as const;
-
-  const useAI = cliOptions.ai ?? config.changelog?.useAI ?? false;
 
   if (!validParts.includes(part as any)) {
     console.error(
@@ -66,10 +65,16 @@ export async function handleBump(
   });
 
   const rawVersion = extractVersionFromTag(current);
-  const next = bumpVersion(rawVersion, part as any);
+  const next = inferVersionOnly
+    ? rawVersion
+    : bumpVersion(rawVersion, part as any);
 
   console.log(`🐵 Current version: ${current}`);
   console.log(`🍌 Next version:    ${next}`);
+
+  if (inferVersionOnly) {
+    console.log(`🔄 Inferring version from latest tag`);
+  }
 
   if (dryRun) {
     const changelog = noChangelog
@@ -99,7 +104,7 @@ export async function handleBump(
     return;
   }
 
-  // Write package.json version bump unless opted out
+  // Update package.json version
   if (!noPackageJson) {
     const packageJsonPath = path.resolve(
       process.cwd(),
@@ -125,7 +130,7 @@ export async function handleBump(
     console.log('📦 Skipping package.json update');
   }
 
-  // Generate and write changelog unless opted out
+  // Generate
   if (!noChangelog) {
     const changelog = await generateSemanticChangelog({
       from: isGitRef ? current : undefined,
@@ -152,8 +157,6 @@ export async function handleBump(
   } else {
     console.log('🚀 Skipping git commit, tag, and push');
   }
-
-  const outputFormat = cliOptions.output ?? 'text';
 
   if (outputFormat === 'json') {
     console.log(JSON.stringify({ next }, null, 2));

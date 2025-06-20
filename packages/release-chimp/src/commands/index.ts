@@ -23,7 +23,7 @@ export function runCLI() {
   addChangelogCommand(program, 'releaseChimp');
 
   program
-    .command('bump <part>')
+    .command('bump [part]')
     .description('Bump version: patch, minor, or major')
     .option('--ci', 'CI mode: skips changelog, git, and package.json')
     .option(
