@@ -15,5 +15,11 @@ export async function askSharedQuestions(
     message: 'GitHub Token (optional)',
   });
 
+  answers.tagFormat = await input({
+    message:
+      'Custom git tag format (e.g., v{version}, @scope/pkg@{version})',
+    default: '${name}@${version}',
+  });
+
   return answers;
 }

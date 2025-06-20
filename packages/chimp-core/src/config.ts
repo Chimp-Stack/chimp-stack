@@ -20,7 +20,7 @@ export function loadChimpConfig(scope?: string): ChimpConfig {
         const { [scope]: scoped = {}, ...topLevel } = data;
         const globalKeys = Object.fromEntries(
           Object.entries(topLevel).filter(([k]) =>
-            ['openaiApiKey', 'githubToken'].includes(k)
+            ['openaiApiKey', 'githubToken', 'tagFormat'].includes(k)
           )
         );
         return { ...globalKeys, ...scoped };

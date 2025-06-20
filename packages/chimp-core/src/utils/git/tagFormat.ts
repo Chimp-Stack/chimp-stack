@@ -7,3 +7,12 @@ export function applyTagFormat(
     .replace(/\$\{name\}/g, name)
     .replace(/\$\{version\}/g, version);
 }
+
+export function extractTagPrefixFromFormat(
+  format: string,
+  name: string
+): string {
+  return format
+    .replace(/\$\{name\}/g, name)
+    .replace(/\$\{version\}/g, '');
+}

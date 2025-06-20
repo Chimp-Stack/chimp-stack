@@ -1,11 +1,14 @@
 import { simpleGit } from 'simple-git';
+import fs from 'node:fs';
 import { Command } from 'commander';
 import {
+  extractTagPrefixFromFormat,
   generateSemanticChangelog,
   logError,
   logSuccess,
   writeChangelogToFile,
 } from '../utils';
+import { loadChimpConfig } from 'src/config';
 
 export function addChangelogCommand(
   program: Command,
@@ -30,14 +33,19 @@ export function addChangelogCommand(
         ai?: boolean;
         latest?: boolean;
       }) => {
+        const config = loadChimpConfig(toolName);
+        const tagFormat = config.tagFormat || '';
         const { from, to, output, ai, latest } = options;
 
-        // const start = from ?? (await getLatestTag()) ?? '0.0.0';
         let start = from;
         let end = to ?? 'HEAD';
 
         if (latest) {
-          const tags = await getSortedTags();
+          const pkgJson = JSON.parse(
+            fs.readFileSync('package.json', 'utf8')
+          );
+          const name = pkgJson.name;
+          const tags = await getSortedTags(tagFormat, name);
           if (tags.length === 0) {
             logError('❌ No tags found in this repository.');
             process.exit(1);
@@ -45,6 +53,10 @@ export function addChangelogCommand(
 
           end = tags[0];
           start = tags[1] ?? '0.0.0';
+
+          console.log(
+            `🪵 Generating changelog from ${start} → ${end}`
+          );
         }
 
         if (!start) {
@@ -83,10 +95,23 @@ async function getLatestTag(): Promise<string | null> {
   return tags.latest ?? null;
 }
 
-async function getSortedTags(): Promise<string[]> {
+async function getSortedTags(
+  tagPrefix?: string,
+  name?: string
+): Promise<string[]> {
   const git = simpleGit();
   const tags = await git.tags();
-  return tags.all.sort((a, b) => {
+
+  let prefix = '';
+  if (tagPrefix && name) {
+    prefix = extractTagPrefixFromFormat(tagPrefix, name);
+  }
+
+  const filtered = tagPrefix
+    ? tags.all.filter((tag) => tag.startsWith(prefix))
+    : tags.all;
+
+  return filtered.sort((a, b) => {
     // fallback to semantic sort
     return b.localeCompare(a, undefined, {
       numeric: true,
