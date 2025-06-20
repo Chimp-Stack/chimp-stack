@@ -18,23 +18,41 @@ export function addChangelogCommand(
     .option('--to <tag>', 'End tag or commit (default: HEAD)')
     .option('--output <file>', 'Output file to append changelog')
     .option('--ai', 'Use AI to generate a summary section')
+    .option(
+      '--latest',
+      'Generate changelog between the last two tags'
+    )
     .action(
       async (options: {
         from?: string;
         to?: string;
         output?: string;
         ai?: boolean;
+        latest?: boolean;
       }) => {
-        const { from, to, output, ai } = options;
+        const { from, to, output, ai, latest } = options;
 
-        const start = from ?? (await getLatestTag()) ?? '0.0.0';
-        const end = to ?? 'HEAD';
+        // const start = from ?? (await getLatestTag()) ?? '0.0.0';
+        let start = from;
+        let end = to ?? 'HEAD';
+
+        if (latest) {
+          const tags = await getSortedTags();
+          if (tags.length === 0) {
+            logError('❌ No tags found in this repository.');
+            process.exit(1);
+          }
+
+          end = tags[0];
+          start = tags[1] ?? '0.0.0';
+        }
 
         if (!start) {
-          logError(
-            '❌ No tags found to use as a starting point. Use --from manually.'
-          );
-          process.exit(1);
+          start = (await getLatestTag()) ?? '0.0.0';
+          if (!start) {
+            logError('❌ No starting tag or commit specified.');
+            process.exit(1);
+          }
         }
 
         const changelog = await generateSemanticChangelog({
@@ -63,4 +81,16 @@ async function getLatestTag(): Promise<string | null> {
   const git = simpleGit();
   const tags = await git.tags();
   return tags.latest ?? null;
+}
+
+async function getSortedTags(): Promise<string[]> {
+  const git = simpleGit();
+  const tags = await git.tags();
+  return tags.all.sort((a, b) => {
+    // fallback to semantic sort
+    return b.localeCompare(a, undefined, {
+      numeric: true,
+      sensitivity: 'base',
+    });
+  });
 }
