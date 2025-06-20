@@ -25,6 +25,7 @@ export async function handleBump(
     noPackageJson?: boolean;
     noChangelog?: boolean;
     noGit?: boolean;
+    output?: string;
   }
 ) {
   const config = loadChimpConfig(
@@ -150,5 +151,13 @@ export async function handleBump(
     console.log(`🚀 Released version ${next} and pushed to remote.`);
   } else {
     console.log('🚀 Skipping git commit, tag, and push');
+  }
+
+  const outputFormat = cliOptions.output ?? 'text';
+
+  if (outputFormat === 'json') {
+    console.log(JSON.stringify({ next }, null, 2));
+  } else {
+    console.log(next);
   }
 }

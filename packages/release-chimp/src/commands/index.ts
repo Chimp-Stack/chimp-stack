@@ -34,6 +34,11 @@ export function runCLI() {
     .option('--no-package-json', 'Skip updating package.json version')
     .option('--no-changelog', 'Skip generating and writing changelog')
     .option('--no-git', 'Skip git commit, tag, and push')
+    .option(
+      '--output <format>',
+      'Output format: json or text',
+      'text'
+    )
     .action(handleBump);
 
   program.parse(process.argv);
