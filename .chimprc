@@ -1,0 +1,14 @@
+{
+  "releaseChimp": {
+    "bumpType": "patch",
+    "dryRun": false,
+    "noPackageJson": false,
+    "noChangelog": false,
+    "noGit": false,
+    "changelog": {
+      "path": "CHANGELOG.md",
+      "useAI": false
+    }
+  },
+  "tagFormat": "${name}@${version}"
+}
