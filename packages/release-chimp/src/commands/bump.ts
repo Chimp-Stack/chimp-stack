@@ -20,6 +20,7 @@ export async function handleBump(
   cliPart: string,
   cliOptions: Command & {
     ai?: boolean;
+    ci?: boolean;
     dryRun?: boolean;
     noPackageJson?: boolean;
     noChangelog?: boolean;
@@ -32,11 +33,21 @@ export async function handleBump(
 
   const part = cliPart || config.bumpType || 'patch';
   const dryRun = cliOptions.dryRun ?? config.dryRun ?? false;
+
+  const isCI = cliOptions.ci ?? false;
+
+  if (isCI) {
+    console.log(
+      '🤖 CI mode enabled: Skipping package.json, changelog, and git.'
+    );
+  }
+
   const noPackageJson =
-    cliOptions.noPackageJson ?? config.noPackageJson ?? false;
+    isCI ||
+    (cliOptions.noPackageJson ?? config.noPackageJson ?? false);
   const noChangelog =
-    cliOptions.noChangelog ?? config.noChangelog ?? false;
-  const noGit = cliOptions.noGit ?? config.noGit ?? false;
+    isCI || (cliOptions.noChangelog ?? config.noChangelog ?? false);
+  const noGit = isCI || (cliOptions.noGit ?? config.noGit ?? false);
 
   const validParts = ['major', 'minor', 'patch'] as const;
 

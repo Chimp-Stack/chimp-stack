@@ -25,6 +25,7 @@ export function runCLI() {
   program
     .command('bump <part>')
     .description('Bump version: patch, minor, or major')
+    .option('--ci', 'CI mode: skips changelog, git, and package.json')
     .option(
       '--dry-run',
       'Preview changes without writing files or committing'
