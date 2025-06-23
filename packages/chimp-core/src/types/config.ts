@@ -1,6 +1,7 @@
 export type ChimpConfig = {
   openaiApiKey?: string;
   githubToken?: string;
+  tagFormat?: string;
   [key: string]: any;
 };
 
@@ -33,7 +34,6 @@ export type DocChimpConfig = ChimpConfig & {
 
 export type ReleaseChimpConfig = ChimpConfig & {
   bumpType?: 'major' | 'minor' | 'patch';
-  tagFormat?: string;
   changelog?: {
     path?: string; // Default: 'CHANGELOG.md'
     useAI?: boolean;

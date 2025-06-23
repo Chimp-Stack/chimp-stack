@@ -22,12 +22,6 @@ export async function askReleaseChimpQuestions(): Promise<ReleaseChimpConfig> {
     default: false,
   });
 
-  const tagFormat = await input({
-    message:
-      'Custom git tag format (e.g., v{version}, @scope/pkg@{version})',
-    default: 'v{version}',
-  });
-
   const changelogPath = await input({
     message: 'Path to changelog file (e.g., CHANGELOG.md)',
     default: 'CHANGELOG.md',
@@ -61,7 +55,6 @@ export async function askReleaseChimpQuestions(): Promise<ReleaseChimpConfig> {
   return {
     bumpType,
     dryRun,
-    tagFormat,
     noPackageJson,
     noChangelog,
     noGit,

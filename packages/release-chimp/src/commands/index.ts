@@ -23,8 +23,9 @@ export function runCLI() {
   addChangelogCommand(program, 'releaseChimp');
 
   program
-    .command('bump <part>')
+    .command('bump [part]')
     .description('Bump version: patch, minor, or major')
+    .option('--ci', 'CI mode: skips changelog, git, and package.json')
     .option(
       '--dry-run',
       'Preview changes without writing files or committing'
@@ -33,6 +34,11 @@ export function runCLI() {
     .option('--no-package-json', 'Skip updating package.json version')
     .option('--no-changelog', 'Skip generating and writing changelog')
     .option('--no-git', 'Skip git commit, tag, and push')
+    .option(
+      '--output <format>',
+      'Output format: json or text',
+      'text'
+    )
     .action(handleBump);
 
   program.parse(process.argv);

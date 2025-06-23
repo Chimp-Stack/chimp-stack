@@ -20,27 +20,38 @@ export async function handleBump(
   cliPart: string,
   cliOptions: Command & {
     ai?: boolean;
+    ci?: boolean;
     dryRun?: boolean;
     noPackageJson?: boolean;
     noChangelog?: boolean;
     noGit?: boolean;
+    output?: string;
   }
 ) {
   const config = loadChimpConfig(
     'releaseChimp'
   ) as ReleaseChimpConfig;
 
-  const part = cliPart || config.bumpType || 'patch';
   const dryRun = cliOptions.dryRun ?? config.dryRun ?? false;
+  const part = cliPart || config.bumpType || 'patch';
+  const inferVersionOnly = cliPart === undefined && !dryRun;
+  const isCI = cliOptions.ci ?? false;
+
+  if (isCI) {
+    console.log(
+      '🤖 CI mode enabled: Skipping package.json, changelog, and git.'
+    );
+  }
+
   const noPackageJson =
     cliOptions.noPackageJson ?? config.noPackageJson ?? false;
   const noChangelog =
-    cliOptions.noChangelog ?? config.noChangelog ?? false;
-  const noGit = cliOptions.noGit ?? config.noGit ?? false;
+    isCI || (cliOptions.noChangelog ?? config.noChangelog ?? false);
+  const noGit = isCI || (cliOptions.noGit ?? config.noGit ?? false);
+  const useAI = cliOptions.ai ?? config.changelog?.useAI ?? false;
+  const outputFormat = cliOptions.output ?? 'text';
 
   const validParts = ['major', 'minor', 'patch'] as const;
-
-  const useAI = cliOptions.ai ?? config.changelog?.useAI ?? false;
 
   if (!validParts.includes(part as any)) {
     console.error(
@@ -54,10 +65,16 @@ export async function handleBump(
   });
 
   const rawVersion = extractVersionFromTag(current);
-  const next = bumpVersion(rawVersion, part as any);
+  const next = inferVersionOnly
+    ? rawVersion
+    : bumpVersion(rawVersion, part as any);
 
   console.log(`🐵 Current version: ${current}`);
   console.log(`🍌 Next version:    ${next}`);
+
+  if (inferVersionOnly) {
+    console.log(`🔄 Inferring version from latest tag`);
+  }
 
   if (dryRun) {
     const changelog = noChangelog
@@ -87,7 +104,7 @@ export async function handleBump(
     return;
   }
 
-  // Write package.json version bump unless opted out
+  // Update package.json version
   if (!noPackageJson) {
     const packageJsonPath = path.resolve(
       process.cwd(),
@@ -113,7 +130,7 @@ export async function handleBump(
     console.log('📦 Skipping package.json update');
   }
 
-  // Generate and write changelog unless opted out
+  // Generate
   if (!noChangelog) {
     const changelog = await generateSemanticChangelog({
       from: isGitRef ? current : undefined,
@@ -139,5 +156,11 @@ export async function handleBump(
     console.log(`🚀 Released version ${next} and pushed to remote.`);
   } else {
     console.log('🚀 Skipping git commit, tag, and push');
+  }
+
+  if (outputFormat === 'json') {
+    console.log(JSON.stringify({ next }, null, 2));
+  } else {
+    console.log(next);
   }
 }
