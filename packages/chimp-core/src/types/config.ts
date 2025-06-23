@@ -43,4 +43,5 @@ export type ReleaseChimpConfig = ChimpConfig & {
   noPackageJson?: boolean;
   noChangelog?: boolean;
   noGit?: boolean;
+  includeNameInCommit?: boolean;
 };

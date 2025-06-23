@@ -91,9 +91,11 @@ export async function handleBump(
     config?.tagFormat && name
       ? applyTagFormat(config.tagFormat, name, next)
       : `v${next}`;
+
+  const includeNameInCommit = config.includeNameInCommit ?? true;
   const commitMessage = isCI
-    ? `chore(release): ${next} [skip ci]`
-    : `chore(release): ${next}`;
+    ? `chore(release): ${includeNameInCommit && name ? `${name} ` : ''}${next} [skip ci]`
+    : `chore(release): ${includeNameInCommit && name ? `${name} ` : ''}${next}`;
 
   const changelog = noChangelog
     ? '_Changelog generation skipped._'
