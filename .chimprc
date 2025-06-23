@@ -1,6 +1,5 @@
 {
   "releaseChimp": {
-    "bumpType": "patch",
     "dryRun": false,
     "noPackageJson": false,
     "noChangelog": false,

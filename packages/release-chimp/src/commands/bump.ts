@@ -16,6 +16,7 @@ import {
   loadChimpConfig,
   ReleaseChimpConfig,
 } from '@chimp-stack/core';
+import { detectRecommendedBump } from '../utils/detectRecommendedBump.js';
 
 export async function handleBump(
   cliPart: string,
@@ -34,7 +35,27 @@ export async function handleBump(
   ) as ReleaseChimpConfig;
 
   const dryRun = cliOptions.dryRun ?? config.dryRun ?? false;
-  const part = cliPart || config.bumpType || 'patch';
+  let part = cliPart || config.bumpType || null;
+  let inferredFromCommits = false;
+
+  if (!part) {
+    part = await detectRecommendedBump();
+    if (part) {
+      console.log(`📦 Bump type auto-detected as: ${part}`);
+      inferredFromCommits = true;
+    } else {
+      console.log('📦 Falling back to patch version bump');
+      part = 'patch';
+    }
+  }
+
+  const validParts = ['major', 'minor', 'patch'] as const;
+  if (!validParts.includes(part as any)) {
+    console.error(
+      `❌ Invalid bump type: '${part}'. Must be one of: ${validParts.join(', ')}`
+    );
+    process.exit(1);
+  }
 
   const inferVersionOnly = cliPart === undefined && !dryRun;
   const isCI = cliOptions.ci ?? false;
@@ -53,14 +74,6 @@ export async function handleBump(
   const useAI = cliOptions.ai ?? config.changelog?.useAI ?? false;
   const outputFormat = cliOptions.output ?? 'text';
 
-  const validParts = ['major', 'minor', 'patch'] as const;
-  if (!validParts.includes(part as any)) {
-    console.error(
-      `❌ Invalid bump type: '${part}'. Must be one of: ${validParts.join(', ')}`
-    );
-    process.exit(1);
-  }
-
   const { version: current, isGitRef } = await detectCurrentVersion({
     tagFormat: config.tagFormat,
   });
@@ -73,6 +86,9 @@ export async function handleBump(
   console.log(`🐵 Current version: ${current}`);
   console.log(`🍌 Next version:    ${next}`);
   console.log('📦 Bump type: %s', part);
+  if (inferredFromCommits) {
+    console.log('🔍 Bump type auto-detected from commit history');
+  }
 
   if (inferVersionOnly) {
     console.log(
