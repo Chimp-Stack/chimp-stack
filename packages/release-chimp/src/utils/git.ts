@@ -5,7 +5,12 @@ import path from 'node:path';
 
 export function gitCommitTagPush(
   version: string,
-  options?: { tagFormat?: string }
+  options?: {
+    tagFormat?: string;
+    commitMessage?: string;
+    changelogPath?: string;
+    skipPush?: boolean;
+  } | null
 ) {
   try {
     const cwd = process.cwd();
@@ -19,13 +24,23 @@ export function gitCommitTagPush(
         ? applyTagFormat(options.tagFormat, name, version)
         : `v${version}`;
 
-    execSync('git add CHANGELOG.md', { stdio: 'inherit' });
-    execSync(`git commit -m "chore(release): ${version}"`, {
+    const changelogFile = options?.changelogPath ?? 'CHANGELOG.md';
+    if (fs.existsSync(path.join(cwd, changelogFile))) {
+      execSync(`git add ${changelogFile}`, { stdio: 'inherit' });
+    }
+
+    const message =
+      options?.commitMessage ?? `chore(release): ${version}`;
+    execSync(`git commit -m "${message}"`, {
       stdio: 'inherit',
     });
+
     execSync(`git tag ${tag}`, { stdio: 'inherit' });
-    execSync('git push', { stdio: 'inherit' });
-    execSync('git push --tags', { stdio: 'inherit' });
+
+    if (!options?.skipPush) {
+      execSync('git push', { stdio: 'inherit' });
+      execSync('git push --tags', { stdio: 'inherit' });
+    }
   } catch (err) {
     console.error('❌ Git operation failed. Releasing is canceled.');
     process.exit(1);

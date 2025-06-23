@@ -34,20 +34,22 @@ export async function handleBump(
 
   const dryRun = cliOptions.dryRun ?? config.dryRun ?? false;
   const part = cliPart || config.bumpType || 'patch';
+  console.log('📦 Bump type: %s', part);
+
   const inferVersionOnly = cliPart === undefined && !dryRun;
   const isCI = cliOptions.ci ?? false;
 
   if (isCI) {
     console.log(
-      '🤖 CI mode enabled: Skipping package.json, changelog, and git.'
+      '🤖 CI mode enabled. Commit messages will include [skip ci]. Use --no-xyz flags to control what gets skipped.'
     );
   }
 
   const noPackageJson =
     cliOptions.noPackageJson ?? config.noPackageJson ?? false;
   const noChangelog =
-    isCI || (cliOptions.noChangelog ?? config.noChangelog ?? false);
-  const noGit = isCI || (cliOptions.noGit ?? config.noGit ?? false);
+    cliOptions.noChangelog ?? config.noChangelog ?? false;
+  const noGit = cliOptions.noGit ?? config.noGit ?? false;
   const useAI = cliOptions.ai ?? config.changelog?.useAI ?? false;
   const outputFormat = cliOptions.output ?? 'text';
 
@@ -73,7 +75,9 @@ export async function handleBump(
   console.log(`🍌 Next version:    ${next}`);
 
   if (inferVersionOnly) {
-    console.log(`🔄 Inferring version from latest tag`);
+    console.log(
+      `🔄 No bump type specified. Inferring version from latest tag.`
+    );
   }
 
   if (dryRun) {
@@ -152,7 +156,13 @@ export async function handleBump(
 
   // Commit, tag, and push unless opted out
   if (!noGit) {
-    gitCommitTagPush(next, { tagFormat: config.tagFormat });
+    gitCommitTagPush(next, {
+      tagFormat: config.tagFormat,
+      commitMessage: isCI
+        ? `chore(release): ${next} [skip ci]`
+        : `chore(release): ${next}`,
+      changelogPath: config.changelog?.path ?? 'CHANGELOG.md',
+    });
     console.log(`🚀 Released version ${next} and pushed to remote.`);
   } else {
     console.log('🚀 Skipping git commit, tag, and push');
