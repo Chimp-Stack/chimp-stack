@@ -132,9 +132,10 @@ export async function handleBump(
         console.log(
           `  - ${config.changelog?.path ?? 'CHANGELOG.md'}`
         );
+
       console.log(`🔧 Would commit with message: "${commitMessage}"`);
-      console.log(`🔧 Would tag release with:    ${tag}`);
-      console.log(`🔧 Would push commit and tag to origin`);
+      console.log(`🏷️  Would tag: ${tag}`);
+      console.log(`🚀 Would push to remote`);
     } else {
       console.log('🔧 Skipping git commit/tag/push');
     }

@@ -79,8 +79,6 @@ export async function generateSemanticChangelog({
     'chore',
   ];
 
-  console.log({ commits, groupOrder });
-
   for (const type of groupOrder) {
     if (semanticGroups[type]?.length) {
       output += `### ${getSectionTitle(type)}\n`;
