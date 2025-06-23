@@ -8,6 +8,7 @@ import {
 } from '@chimp-stack/core/utils/changelog';
 import { gitCommitTagPush } from '../utils/git.js';
 import {
+  applyTagFormat,
   detectCurrentVersion,
   extractVersionFromTag,
 } from '@chimp-stack/core/utils';
@@ -34,7 +35,6 @@ export async function handleBump(
 
   const dryRun = cliOptions.dryRun ?? config.dryRun ?? false;
   const part = cliPart || config.bumpType || 'patch';
-  console.log('📦 Bump type: %s', part);
 
   const inferVersionOnly = cliPart === undefined && !dryRun;
   const isCI = cliOptions.ci ?? false;
@@ -54,7 +54,6 @@ export async function handleBump(
   const outputFormat = cliOptions.output ?? 'text';
 
   const validParts = ['major', 'minor', 'patch'] as const;
-
   if (!validParts.includes(part as any)) {
     console.error(
       `❌ Invalid bump type: '${part}'. Must be one of: ${validParts.join(', ')}`
@@ -73,6 +72,7 @@ export async function handleBump(
 
   console.log(`🐵 Current version: ${current}`);
   console.log(`🍌 Next version:    ${next}`);
+  console.log('📦 Bump type: %s', part);
 
   if (inferVersionOnly) {
     console.log(
@@ -80,28 +80,63 @@ export async function handleBump(
     );
   }
 
-  if (dryRun) {
-    const changelog = noChangelog
-      ? '_Changelog generation skipped (dry run)._'
-      : await generateSemanticChangelog({
-          from: isGitRef ? current : undefined,
-          to: 'HEAD',
-          toolName: 'releaseChimp',
-          useAI,
-        });
+  const pkgPath = path.resolve(process.cwd(), 'package.json');
+  const hasPkg = fs.existsSync(pkgPath);
+  const pkg = hasPkg
+    ? JSON.parse(fs.readFileSync(pkgPath, 'utf-8'))
+    : {};
 
+  const name = pkg.name;
+  const tag =
+    config?.tagFormat && name
+      ? applyTagFormat(config.tagFormat, name, next)
+      : `v${next}`;
+  const commitMessage = isCI
+    ? `chore(release): ${next} [skip ci]`
+    : `chore(release): ${next}`;
+
+  const changelog = noChangelog
+    ? '_Changelog generation skipped._'
+    : await generateSemanticChangelog({
+        from: isGitRef ? current : undefined,
+        to: 'HEAD',
+        toolName: 'releaseChimp',
+        useAI,
+      });
+
+  if (dryRun) {
     console.log('\n🔍 [Dry Run] Preview:\n');
+
     if (!noPackageJson) {
       console.log(`📦 Would update package.json version to ${next}`);
     } else {
       console.log('📦 Skipping package.json update');
     }
-    console.log(changelog);
+
+    if (!noChangelog) {
+      console.log(
+        `📝 Would write changelog to ${config.changelog?.path ?? 'CHANGELOG.md'}`
+      );
+      console.log('📝 Changelog preview:');
+      console.log(changelog);
+    } else {
+      console.log('📝 Skipping changelog update');
+    }
+
     if (!noGit) {
-      console.log(`🔧 Would commit, tag, and push version ${next}`);
+      console.log(`🔧 Would stage:`);
+      if (!noPackageJson) console.log(`  - package.json`);
+      if (!noChangelog)
+        console.log(
+          `  - ${config.changelog?.path ?? 'CHANGELOG.md'}`
+        );
+      console.log(`🔧 Would commit with message: "${commitMessage}"`);
+      console.log(`🔧 Would tag release with:    ${tag}`);
+      console.log(`🔧 Would push commit and tag to origin`);
     } else {
       console.log('🔧 Skipping git commit/tag/push');
     }
+
     console.log(
       '\n✅ Dry run complete. No files written, no git commands run.'
     );
@@ -110,21 +145,14 @@ export async function handleBump(
 
   // Update package.json version
   if (!noPackageJson) {
-    const packageJsonPath = path.resolve(
-      process.cwd(),
-      'package.json'
-    );
-    if (!fs.existsSync(packageJsonPath)) {
+    if (!hasPkg) {
       console.warn(
         '⚠️  package.json not found, skipping version update.'
       );
     } else {
-      const pkg = JSON.parse(
-        fs.readFileSync(packageJsonPath, 'utf-8')
-      );
       pkg.version = next;
       fs.writeFileSync(
-        packageJsonPath,
+        pkgPath,
         JSON.stringify(pkg, null, 2) + '\n',
         'utf-8'
       );
@@ -136,15 +164,8 @@ export async function handleBump(
 
   // Generate
   if (!noChangelog) {
-    const changelog = await generateSemanticChangelog({
-      from: isGitRef ? current : undefined,
-      to: 'HEAD',
-      toolName: 'releaseChimp',
-      useAI,
-    });
-
     try {
-      writeChangelogToFile(changelog);
+      writeChangelogToFile(changelog, config.changelog?.path);
       console.log('📝 Changelog updated');
     } catch (error) {
       console.error(`❌ Failed to write changelog`);
@@ -158,9 +179,7 @@ export async function handleBump(
   if (!noGit) {
     gitCommitTagPush(next, {
       tagFormat: config.tagFormat,
-      commitMessage: isCI
-        ? `chore(release): ${next} [skip ci]`
-        : `chore(release): ${next}`,
+      commitMessage,
       changelogPath: config.changelog?.path ?? 'CHANGELOG.md',
     });
     console.log(`🚀 Released version ${next} and pushed to remote.`);
