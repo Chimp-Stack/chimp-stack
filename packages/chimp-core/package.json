@@ -76,7 +76,6 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "@types/conventional-commits-parser": "^5.0.1",
     "@types/node": "^22.15.29",
     "tsup": "^8.5.0",
     "typescript": "^5.4.0",
@@ -86,7 +85,6 @@
     "@inquirer/prompts": "^7.5.3",
     "chalk": "^5.4.1",
     "commander": "^14.0.0",
-    "conventional-commits-parser": "^6.2.0",
     "inquirer": "^12.6.3"
   }
 }
