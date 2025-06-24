@@ -1,4 +1,4 @@
-import { getChalk } from 'src/utils/getChalk';
+import { getChalk } from '../utils/getChalk';
 
 export async function logInfo(msg: string, prefix = '[chimp] ') {
   const chalk = await getChalk();

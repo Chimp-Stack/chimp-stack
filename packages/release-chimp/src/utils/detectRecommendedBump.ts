@@ -1,5 +1,7 @@
-import { Bumper } from 'conventional-recommended-bump';
-import { loadChimpConfig } from '@chimp-stack/core';
+import {
+  getSemanticCommits,
+  loadChimpConfig,
+} from '@chimp-stack/core';
 import type { ReleaseChimpConfig } from '@chimp-stack/core';
 
 export async function detectRecommendedBump(): Promise<
@@ -8,23 +10,41 @@ export async function detectRecommendedBump(): Promise<
   const config = loadChimpConfig(
     'releaseChimp'
   ) as ReleaseChimpConfig;
-  const preset = config.bump?.preset || 'conventionalcommits';
+  const scoped = config.bump?.scoped ?? false;
 
-  try {
-    const bumper = new Bumper().loadPreset(preset);
-    const result = await bumper.bump();
+  const commits = await getSemanticCommits({
+    scoped,
+    configDir: process.cwd(),
+  });
 
-    if (typeof result === 'object' && 'releaseType' in result) {
-      const type = result.releaseType;
-      if (type === 'major' || type === 'minor' || type === 'patch') {
-        return type;
-      }
+  let hasBreaking = false;
+  let hasFeature = false;
+  let hasFix = false;
+
+  for (const c of commits) {
+    if (c.isBreaking) {
+      hasBreaking = true;
     }
-
-    console.warn('⚠️  Unable to determine bump type from commits.');
-    return null;
-  } catch (error) {
-    console.log('❌ Failed to detect recommended bump:', error);
-    return null;
+    if (c.type === 'feat') {
+      hasFeature = true;
+    }
+    if (c.type === 'fix') {
+      hasFix = true;
+    }
   }
+
+  if (hasBreaking) {
+    return 'major';
+  }
+
+  if (hasFeature) {
+    return 'minor';
+  }
+
+  if (hasFix) {
+    return 'patch';
+  }
+
+  console.warn('⚠️  No semantic commits found for bump detection.');
+  return null;
 }

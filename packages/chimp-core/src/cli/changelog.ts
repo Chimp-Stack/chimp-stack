@@ -8,7 +8,7 @@ import {
   logSuccess,
   writeChangelogToFile,
 } from '../utils';
-import { loadChimpConfig } from 'src/config';
+import { loadChimpConfig } from '../config';
 
 export function addChangelogCommand(
   program: Command,

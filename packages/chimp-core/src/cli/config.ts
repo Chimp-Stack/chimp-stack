@@ -1,4 +1,4 @@
-import { getChalk } from 'src/utils/getChalk';
+import { getChalk } from '../utils/getChalk';
 import { writeChimpConfig, loadChimpConfig } from '../config';
 
 export async function listConfig(scope: string) {

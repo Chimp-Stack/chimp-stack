@@ -1,11 +1,10 @@
-import { simpleGit } from 'simple-git';
-import type { DefaultLogFields, ListLogLine } from 'simple-git';
 import type {
   GitChimpConfig,
   ReleaseChimpConfig,
 } from '../../types/config.js';
 import { generateChangelogEntries } from '../openai.js';
 import { loadChimpConfig } from '../../config.js';
+import { getSemanticCommits } from '../git/getSemanticCommits.js';
 
 type ChangelogConfig = GitChimpConfig | ReleaseChimpConfig;
 
@@ -21,32 +20,13 @@ export async function generateSemanticChangelog({
   useAI?: boolean;
 }): Promise<string> {
   const config = loadChimpConfig(toolName) as ChangelogConfig;
-  const git = simpleGit();
-
-  // 🕵️ Verify 'from' actually exists as a valid git ref
-  if (from) {
-    const refExists = await git
-      .raw(['rev-parse', '--verify', `${from}^{}`])
-      .then(() => true)
-      .catch(() => false);
-
-    if (!refExists) {
-      console.warn(
-        `⚠️  Git ref '${from}' not found — falling back to full history.`
-      );
-      from = undefined;
-    }
-  }
-
-  // 📜 Get git log
-  let log;
-  try {
-    log = from ? await git.log({ from, to }) : await git.log();
-  } catch (err) {
-    throw new Error(`❌ Failed to get git log: ${err}`);
-  }
-
-  const commits: (DefaultLogFields & ListLogLine)[] = [...log.all];
+  const scoped = config.changelog?.scoped ?? false;
+  const commits = await getSemanticCommits({
+    from,
+    to,
+    scoped,
+    configDir: process.cwd(),
+  });
 
   if (commits.length === 0) {
     return `## Changelog (${from ?? 'initial'} → ${to})\n\n_No commits found._\n`;
@@ -54,17 +34,9 @@ export async function generateSemanticChangelog({
 
   // 🧠 Group by type
   const semanticGroups: Record<string, string[]> = {};
-
   for (const c of commits) {
-    const match = c.message.match(
-      /^(feat|fix|docs|chore|style|refactor|perf|test)(\(.*?\))?: (.+)/
-    );
-    if (match) {
-      const type = match[1];
-      const description = match[3];
-      if (!semanticGroups[type]) semanticGroups[type] = [];
-      semanticGroups[type].push(description);
-    }
+    if (!semanticGroups[c.type]) semanticGroups[c.type] = [];
+    semanticGroups[c.type].push(c.description);
   }
 
   let output = `## Changelog (${from ?? 'initial'} → ${to})\n\n`;
@@ -92,7 +64,7 @@ export async function generateSemanticChangelog({
   const shouldUseAI = useAI || config?.changelog?.useAI;
   if (shouldUseAI) {
     const aiSummary = await generateChangelogEntries(
-      commits,
+      commits.map((c) => ({ message: c.raw })),
       config.tone,
       config.model,
       toolName
