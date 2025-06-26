@@ -28,7 +28,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           registry-url: 'https://registry.npmjs.org/'
 
       - name: Configure npm authentication
@@ -41,22 +41,17 @@ jobs:
       - name: Build package
         run: npx turbo run build --filter=${{ matrix.package }}
 
-      - name: Detect next version with semantic-release
-        id: detect
+      - name: Git identity for bot commits
+        run: |
+          git config user.name "chimp-bot"
+          git config user.email "chimp-bot@chimp-stack.com"
+
+      - name: Run release-chimp bump
         working-directory: packages/${{ matrix.package }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION=$(npx semantic-release --dry-run | grep -oP '(?<=The next release version is )[^ ]+')
-          echo "Detected version: $VERSION"
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-      - name: Bump, changelog, commit, and tag
-        working-directory: packages/${{ matrix.package }}
-        run: |
-          git config user.name "chimp-bot"
-          git config user.email "chimp-bot@chimp-stack.com"
-          npx release-chimp bump ${{steps.detect.outputs.version}} --ci
+          npx release-chimp bump --ci
 
       - name: Publish to npm
         working-directory: packages/${{ matrix.package }}
