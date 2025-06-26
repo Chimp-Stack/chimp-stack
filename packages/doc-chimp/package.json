@@ -38,7 +38,6 @@
     "typescript": "^5.8.3"
   },
   "devDependencies": {
-    "@chimp-stack/release-chimp": "*",
     "@types/jest": "^29.5.14",
     "conventional-changelog-conventionalcommits": "^9.0.0",
     "jest": "^29.7.0",

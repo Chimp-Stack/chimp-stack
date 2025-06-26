@@ -36,7 +36,6 @@
     "simple-git": "^3.27.0"
   },
   "devDependencies": {
-    "@chimp-stack/release-chimp": "*",
     "@types/node": "^22.15.29",
     "eslint": "^9.29.0",
     "prettier": "^3.5.3",

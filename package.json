@@ -12,6 +12,7 @@
     "lint": "turbo run lint"
   },
   "devDependencies": {
+    "@chimp-stack/release-chimp": "*",
     "turbo": "^1.13.0"
   }
 }

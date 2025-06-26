@@ -28,30 +28,25 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '20'
           registry-url: 'https://registry.npmjs.org/'
 
       - name: Configure npm authentication
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
-      - name: Install dependencies
+      - name: Install dependencies at root
         run: npm ci
 
       - name: Build package
         run: npx turbo run build --filter=${{ matrix.package }}
 
-      - name: Git identity for bot commits
+      - name: Bump, changelog, commit, and tag
         run: |
           git config user.name "chimp-bot"
           git config user.email "chimp-bot@chimp-stack.com"
-
-      - name: Run release-chimp bump
-        working-directory: packages/${{ matrix.package }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
           npx @chimp-stack/release-chimp bump --ci
+        working-directory: packages/${{ matrix.package }}
 
       - name: Publish to npm
         working-directory: packages/${{ matrix.package }}

@@ -80,7 +80,6 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "@chimp-stack/release-chimp": "*",
     "@types/node": "^22.15.29",
     "tsup": "^8.5.0",
     "typescript": "^5.4.0",
