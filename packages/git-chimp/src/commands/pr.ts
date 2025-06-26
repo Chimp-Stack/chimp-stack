@@ -66,7 +66,6 @@ export async function handlePR(
     const rawDiff = await git.diff(['main', currentBranch]);
     const diff = filterDiff(rawDiff);
     let prTitle = `🚀 ${currentBranch}`;
-
     if (config.enforceSemanticPrTitles) {
       prTitle = await generatePullRequestTitle(
         diff,
