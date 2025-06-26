@@ -3,6 +3,12 @@ export type ChimpConfig = {
   githubToken?: string;
   tagFormat?: string;
   [key: string]: any;
+  changelog?: {
+    path?: string; // Default: 'CHANGELOG.md'
+    useAI?: boolean;
+    groupOrder?: string[];
+    scoped?: boolean;
+  };
 };
 
 export type GitChimpConfig = ChimpConfig & {
@@ -16,10 +22,6 @@ export type GitChimpConfig = ChimpConfig & {
     | 'sarcastic'
     | 'enthusiastic'
     | string;
-  changelog?: {
-    useAI?: boolean;
-    groupOrder?: string[];
-  };
 };
 
 export type DocChimpConfig = ChimpConfig & {
@@ -34,13 +36,13 @@ export type DocChimpConfig = ChimpConfig & {
 
 export type ReleaseChimpConfig = ChimpConfig & {
   bumpType?: 'major' | 'minor' | 'patch';
-  changelog?: {
-    path?: string; // Default: 'CHANGELOG.md'
-    useAI?: boolean;
-    groupOrder?: string[];
+  bump?: {
+    preset?: string;
+    scoped?: boolean;
   };
   dryRun?: boolean;
   noPackageJson?: boolean;
   noChangelog?: boolean;
   noGit?: boolean;
+  includeNameInCommit?: boolean;
 };

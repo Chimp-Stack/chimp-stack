@@ -87,3 +87,32 @@ export function extractVersionFromTag(tag: string): string {
   }
   return match[1];
 }
+
+export function filterDiff(diff: string): string {
+  const IGNORED_PATHS = [
+    'package-lock.json',
+    'yarn.lock',
+    'pnpm-lock.yaml',
+    'bun.lockb',
+    'CHANGELOG.md',
+    '.env',
+    '.DS_Store',
+  ];
+
+  const lines = diff.split('\n');
+  const filtered: string[] = [];
+
+  let include = true;
+  for (const line of lines) {
+    if (line.startsWith('diff --git')) {
+      const filePath = line.split(' b/')[1];
+      include = !IGNORED_PATHS.some((ignored) =>
+        filePath?.includes(ignored)
+      );
+    }
+
+    if (include) filtered.push(line);
+  }
+
+  return filtered.join('\n');
+}

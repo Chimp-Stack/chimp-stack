@@ -7,6 +7,8 @@ export default defineConfig({
     'src/utils/changelog/index.ts',
     'src/utils/logger.ts',
     'src/utils/openai.ts',
+    'src/utils/chalk.ts',
+    'src/utils/git/index.ts',
     'src/config.ts',
     'src/env.ts',
     'src/types/config.ts',
@@ -24,4 +26,5 @@ export default defineConfig({
   shims: false,
   splitting: false,
   onSuccess: 'echo ✅ Build complete',
+  external: ['source-map', 'whatwg-url', 'tr46', 'punycode'],
 });

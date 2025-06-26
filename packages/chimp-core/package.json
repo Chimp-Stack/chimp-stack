@@ -62,6 +62,10 @@
     "./utils/openai": {
       "import": "./dist/utils/openai.js",
       "require": "./dist/utils/openai.js"
+    },
+    "./utils/chalk": {
+      "import": "./dist/utils/chalk.js",
+      "require": "./dist/utils/chalk.js"
     }
   },
   "publishConfig": {

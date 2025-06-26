@@ -5,6 +5,7 @@ import {
   addChangelogCommand,
 } from '@chimp-stack/core/cli';
 import { handleBump } from './bump.js';
+import { handleDetectBump } from './detect-bump.js';
 
 const version = __VERSION__;
 
@@ -40,6 +41,13 @@ export function runCLI() {
       'text'
     )
     .action(handleBump);
+
+  program
+    .command('detect-bump')
+    .description(
+      'Detect recommended bump type (major, minor, patch) based on commit history'
+    )
+    .action(handleDetectBump);
 
   program.parse(process.argv);
 }

@@ -1,10 +1,10 @@
 import { Command } from 'commander';
 import { writeChimpConfig } from '../config';
 import select from '@inquirer/select';
-import { askSharedQuestions } from 'src/prompts/shared';
-import { askGitChimpQuestions } from 'src/prompts/gitChimp';
-import { askDocChimpQuestions } from 'src/prompts/docChimp';
-import { askReleaseChimpQuestions } from 'src/prompts/releaseChimp';
+import { askSharedQuestions } from '../prompts/shared';
+import { askGitChimpQuestions } from '../prompts/gitChimp';
+import { askDocChimpQuestions } from '../prompts/docChimp';
+import { askReleaseChimpQuestions } from '../prompts/releaseChimp';
 
 export function addChimpInitCommand(
   program: Command,

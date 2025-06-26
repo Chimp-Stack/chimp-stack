@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { logError } from '../logger';
+import { chimplog } from '../chimplog';
 
 export function writeChangelogToFile(
   changelog: string,
@@ -21,7 +21,7 @@ export function writeChangelogToFile(
   try {
     fs.writeFileSync(resolvedPath, `${full.trim()}\n`, 'utf-8');
   } catch (error) {
-    logError(
+    chimplog.error(
       `❌ Failed to write changelog to ${resolvedPath}: ${error}`
     );
     throw error;

@@ -1,4 +1,5 @@
-import { GitChimpConfig, logWarn } from '@chimp-stack/core';
+import { GitChimpConfig } from '@chimp-stack/core';
+import { chimplog } from './chimplog.js';
 
 export function guessSemanticPrefix(diff: string): string {
   const lowerDiff = diff.toLowerCase();
@@ -47,13 +48,12 @@ export function validatePrTitle(
   opts: { throwOnError?: boolean } = {}
 ): boolean {
   const isValid = isSemanticPrTitle(title);
-
   if (!isValid && config.enforceSemanticPrTitles) {
     const msg = `❌ PR title "${title}" is not semantic. Expected something like "feat: Add login support"`;
     if (opts.throwOnError) {
       throw new Error(msg);
     } else {
-      logWarn(msg);
+      chimplog.warn(msg);
     }
   }
 

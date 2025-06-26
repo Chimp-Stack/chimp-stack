@@ -2,9 +2,10 @@ import { execSync } from 'node:child_process';
 import { DocChimpConfig, loadChimpConfig } from '@chimp-stack/core';
 import fg from 'fast-glob';
 import path from 'node:path';
-import chalk from 'chalk';
+
 import { FileTree, writeOutputFile } from '../utils/file.js';
 import { isUndocumented } from '../utils/isUndocumented.js';
+import { chalk } from '@chimp-stack/core/utils/chalk';
 
 export function insertIntoTree(
   tree: FileTree,

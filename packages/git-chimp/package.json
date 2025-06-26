@@ -8,9 +8,9 @@
   },
   "type": "module",
   "bin": {
-    "git-chimp": "./dist/cli.js"
+    "git-chimp": "./dist/cli.mjs"
   },
-  "main": "./dist/cli.js",
+  "main": "./dist/cli.mjs",
   "files": [
     "dist"
   ],

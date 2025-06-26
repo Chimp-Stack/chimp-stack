@@ -1,7 +1,7 @@
 import select from '@inquirer/select';
 import confirm from '@inquirer/confirm';
 import input from '@inquirer/input';
-import { ReleaseChimpConfig } from 'src/types/config';
+import { ReleaseChimpConfig } from '../types/config';
 
 export async function askReleaseChimpQuestions(): Promise<ReleaseChimpConfig> {
   const choices = [
@@ -52,6 +52,11 @@ export async function askReleaseChimpQuestions(): Promise<ReleaseChimpConfig> {
     default: false,
   });
 
+  const includeNameInCommit = await confirm({
+    message: 'Include package name in commit message?',
+    default: true,
+  });
+
   return {
     bumpType,
     dryRun,
@@ -65,5 +70,6 @@ export async function askReleaseChimpQuestions(): Promise<ReleaseChimpConfig> {
         ? changelogGroupOrder.split(',').map((s) => s.trim())
         : [],
     },
+    includeNameInCommit,
   };
 }

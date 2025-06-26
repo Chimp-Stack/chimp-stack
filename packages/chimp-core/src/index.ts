@@ -9,5 +9,6 @@ export * from './cli/changelog';
 
 export * from './utils/changelog';
 export * from './utils/git';
-export * from './utils/logger';
+export * from './utils/createLogger';
 export * from './utils/openai';
+export * from './utils/chalk';

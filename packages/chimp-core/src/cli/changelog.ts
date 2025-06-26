@@ -2,13 +2,13 @@ import { simpleGit } from 'simple-git';
 import fs from 'node:fs';
 import { Command } from 'commander';
 import {
+  createLogger,
   extractTagPrefixFromFormat,
   generateSemanticChangelog,
-  logError,
-  logSuccess,
   writeChangelogToFile,
 } from '../utils';
-import { loadChimpConfig } from 'src/config';
+
+import { loadChimpConfig } from '../config';
 
 export function addChangelogCommand(
   program: Command,
@@ -33,6 +33,13 @@ export function addChangelogCommand(
         ai?: boolean;
         latest?: boolean;
       }) => {
+        let prefix = '[chimp]';
+        if (toolName === 'gitChimp') {
+          prefix = 'git-chimp';
+        } else if (toolName === 'releaseChimp') {
+          prefix = 'release-chimp';
+        }
+        const chimplog = await createLogger(prefix);
         const config = loadChimpConfig(toolName);
         const tagFormat = config.tagFormat || '';
         const { from, to, output, ai, latest } = options;
@@ -47,7 +54,7 @@ export function addChangelogCommand(
           const name = pkgJson.name;
           const tags = await getSortedTags(tagFormat, name);
           if (tags.length === 0) {
-            logError('❌ No tags found in this repository.');
+            chimplog.error('❌ No tags found in this repository.');
             process.exit(1);
           }
 
@@ -62,7 +69,7 @@ export function addChangelogCommand(
         if (!start) {
           start = (await getLatestTag()) ?? '0.0.0';
           if (!start) {
-            logError('❌ No starting tag or commit specified.');
+            chimplog.error('❌ No starting tag or commit specified.');
             process.exit(1);
           }
         }
@@ -78,7 +85,7 @@ export function addChangelogCommand(
           const outputPath = process.cwd() + '/' + output;
           try {
             writeChangelogToFile(changelog, outputPath);
-            logSuccess(`✅ Changelog written to ${outputPath}`);
+            chimplog.success(`✅ Changelog written to ${outputPath}`);
           } catch (_) {
             process.exit(1);
           }
