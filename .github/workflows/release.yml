@@ -41,15 +41,12 @@ jobs:
       - name: Build all packages
         run: npx turbo run build
 
-      - name: Debug CLI existence
-        run: ls -la node_modules/.bin | grep release-chimp || echo "release-chimp CLI not found"
-
       - name: Bump, changelog, commit, and tag
         working-directory: packages/${{ matrix.package }}
         run: |
           git config user.name "chimp-bot"
           git config user.email "chimp-bot@chimp-stack.com"
-          npx @chimp-stack/release-chimp bump --ci
+          node ../../release-chimp/dist/cli/index.js bump --ci
 
       - name: Publish to npm
         working-directory: packages/${{ matrix.package }}
