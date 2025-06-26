@@ -105,6 +105,13 @@ export async function handleBump(
     console.log('🔍 Bump type auto-detected from commit history');
   }
 
+  if (next === rawVersion) {
+    console.error(
+      `❌ Version '${next}' is already published. Skipping.`
+    );
+    process.exit(0); // or 1 if you want CI to fail
+  }
+
   if (inferVersionOnly) {
     console.log(
       `🔄 No bump type specified. Inferring version from latest tag.`
