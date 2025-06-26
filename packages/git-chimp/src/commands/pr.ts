@@ -6,11 +6,8 @@ import {
 } from '@chimp-stack/core/utils/openai';
 import readline from 'readline';
 import { validatePrTitle } from '../utils/git.js';
-import {
-  chalk,
-  GitChimpConfig,
-  loadChimpConfig,
-} from '@chimp-stack/core';
+import { GitChimpConfig, loadChimpConfig } from '@chimp-stack/core';
+import { chalk } from '@chimp-stack/core/utils/chalk';
 import { filterDiff } from '@chimp-stack/core/utils/git';
 import { chimplog } from '../utils/chimplog.js';
 
