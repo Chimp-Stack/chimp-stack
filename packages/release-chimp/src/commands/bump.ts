@@ -28,8 +28,23 @@ export async function handleBump(
     noChangelog?: boolean;
     noGit?: boolean;
     output?: string;
+    cwd?: string;
   }
 ) {
+  if (cliOptions.cwd) {
+    try {
+      process.chdir(cliOptions.cwd);
+      console.log(
+        `🧭 Changed working directory to ${cliOptions.cwd}`
+      );
+    } catch (err) {
+      console.error(
+        `❌ Failed to change directory: ${cliOptions.cwd}`,
+        err
+      );
+      process.exit(1);
+    }
+  }
   const config = loadChimpConfig(
     'releaseChimp'
   ) as ReleaseChimpConfig;

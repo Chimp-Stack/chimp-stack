@@ -40,6 +40,10 @@ export function runCLI() {
       'Output format: json or text',
       'text'
     )
+    .option(
+      '--cwd <path>',
+      'Change working directory before running command'
+    )
     .action(handleBump);
 
   program
