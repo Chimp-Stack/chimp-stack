@@ -3,13 +3,8 @@ import { simpleGit } from 'simple-git';
 import inquirer from 'inquirer';
 import { cleanCommitMessages } from '../utils/format.js';
 import { isConventionalCommit } from '../utils/git.js';
-import {
-  GitChimpConfig,
-  loadChimpConfig,
-  logError,
-  logWarn,
-  logSuccess,
-} from '@chimp-stack/core';
+import { GitChimpConfig, loadChimpConfig } from '@chimp-stack/core';
+import { chimplog } from '../utils/chimplog.js';
 
 const git = simpleGit();
 
@@ -37,7 +32,7 @@ export async function handleCommitCommand(
     const diff = await git.diff(['--staged']);
 
     if (!diff) {
-      logWarn('⚠️ No staged changes found.');
+      chimplog.warn('⚠️ No staged changes found.');
       process.exit(0);
     }
 
@@ -53,18 +48,18 @@ export async function handleCommitCommand(
         },
       ]);
       if (enforceCommits && !isConventionalCommit(customMessage)) {
-        logError(
+        chimplog.error(
           '❌ Commit message does not follow Conventional Commit format.'
         );
 
-        logWarn(
+        chimplog.warn(
           'Expected format: "type(scope): description"\nExample: "feat(auth): add login button"'
         );
         process.exit(1);
       }
 
       await git.commit(customMessage);
-      logSuccess('✅ Commit created!');
+      chimplog.success('✅ Commit created!');
       process.exit(0);
     }
 
@@ -125,17 +120,17 @@ export async function handleCommitCommand(
     }
 
     if (enforceCommits && !isConventionalCommit(finalMessage)) {
-      logError(
+      chimplog.error(
         '❌ Commit message does not follow Conventional Commit format.'
       );
-      logWarn(
+      chimplog.warn(
         'Expected format: "type(scope): description"\nExample: "feat(auth): add login button"'
       );
       process.exit(1);
     }
     await git.commit(finalMessage);
-    logSuccess('✅ Commit created!');
+    chimplog.success('✅ Commit created!');
   } catch (error) {
-    logError(`❌ Error creating commit: ${error}`);
+    chimplog.error(`❌ Error creating commit: ${error}`);
   }
 }

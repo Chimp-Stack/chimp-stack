@@ -7,6 +7,7 @@ export default defineConfig({
     'src/utils/changelog/index.ts',
     'src/utils/logger.ts',
     'src/utils/openai.ts',
+    'src/utils/chalk.ts',
     'src/utils/git/index.ts',
     'src/config.ts',
     'src/env.ts',

@@ -1,12 +1,12 @@
-import { getChalk } from '../utils/getChalk';
+import { chimplog } from '../utils/chimplog.js';
 import { writeChimpConfig, loadChimpConfig } from '../config';
+import { chalk } from '../utils/chalk';
 
-export async function listConfig(scope: string) {
-  const chalk = await getChalk();
+export function listConfig(scope: string) {
   const config = loadChimpConfig(scope);
 
   if (Object.keys(config).length === 0) {
-    console.log(chalk.gray(`No config found for ${scope}.`));
+    chimplog.muted(`No config found for ${scope}.`);
   } else {
     console.log(chalk.bold(`Config for ${scope}:\n`));
     for (const [key, value] of Object.entries(config)) {
@@ -27,15 +27,12 @@ export async function listConfig(scope: string) {
   process.exit(0);
 }
 
-export async function getConfig(scope: string, key: string) {
-  const chalk = await getChalk();
+export function getConfig(scope: string, key: string) {
   const config = loadChimpConfig(scope);
   const val = config[key];
 
   if (val === undefined) {
-    console.error(
-      chalk.redBright(`✖ Key "${key}" not found in ${scope} config.`)
-    );
+    chimplog.error(`✖ Key "${key}" not found in ${scope} config.`);
     process.exit(1);
   } else {
     if (typeof val === 'object') {
@@ -59,7 +56,6 @@ export async function setConfig(
   key: string,
   value: string
 ) {
-  const chalk = await getChalk();
   writeChimpConfig({ [key]: value }, { scope, location: 'global' });
   console.log(
     chalk.greenBright(

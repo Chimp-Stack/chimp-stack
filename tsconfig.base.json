@@ -1,8 +1,9 @@
+// tsconfig.base.json
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext", 
     "lib": ["ES2020"],
     "types": ["node"],
     "declaration": true,
@@ -12,20 +13,20 @@
     "strict": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
+
+    // Optional but nice for package exports
+    "moduleDetection": "force",
+    "allowImportingTsExtensions": false,
+    "noEmit": false,
+    // "preserveModules": true,
+    "outDir": "dist",
+
+    // Optional cleanup: no need for verbose `paths` if you're publishing
+    // Otherwise use for local tooling like you're doing
+    "baseUrl": ".",
     "paths": {
       "@chimp-stack/core": ["packages/chimp-core/src/index.ts"],
-      "@chimp-stack/core/config": ["packages/chimp-core/src/config.ts"],
-      "@chimp-stack/core/env": ["packages/chimp-core/src/env.ts"],
-      "@chimp-stack/core/types/config": ["packages/chimp-core/src/types/config.ts"],
-      "@chimp-stack/core/cli/addChimpConfigCommand": ["packages/chimp-core/src/cli/addChimpConfigCommand.ts"],
-      "@chimp-stack/core/cli/config": ["packages/chimp-core/src/cli/config.ts"],
-      "@chimp-stack/core/cli/init": ["packages/chimp-core/src/cli/init.ts"],
-      "@chimp-stack/core/utils": ["packages/chimp-core/src/utils/index.ts"],
-      "@chimp-stack/core/utils/*": ["packages/chimp-core/src/utils/*"],
-      "@chimp-stack/core/utils/changelog": ["packages/chimp-core/src/utils/changelog/index.ts"],
-      "@chimp-stack/core/utils/git": ["packages/chimp-core/src/utils/git/index.ts"],
-      "@chimp-stack/core/utils/logger": ["packages/chimp-core/src/utils/logger.ts"],
-      "@chimp-stack/core/utils/openai": ["packages/chimp-core/src/utils/openai.ts"]
+      "@chimp-stack/core/*": ["packages/chimp-core/src/*"]
     }
   }
 }

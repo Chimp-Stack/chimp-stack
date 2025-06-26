@@ -8,6 +8,7 @@ export default defineConfig({
   outDir: 'dist',
   clean: true,
   dts: true,
+  outExtension: () => ({ js: '.mjs' }),
   define: {
     __VERSION__: JSON.stringify(pkg.version),
   },
