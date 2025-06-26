@@ -75,16 +75,19 @@ export async function generatePullRequestTitle(
   model = 'gpt-3.5-turbo',
   tool = 'gitChimp'
 ): Promise<string> {
-  const openai = getOpenAIInstance(tool);
+  try {
+    const openai = getOpenAIInstance(tool);
 
-  const systemPrompt = enforceSemanticPrTitles
-    ? `You are an assistant that strictly generates semantic PR titles following the Conventional Commits format.`
-    : `You are an assistant that generates clear and useful PR titles.`;
+    const systemPrompt = enforceSemanticPrTitles
+      ? `You are an assistant that strictly generates semantic PR titles following the Conventional Commits format.`
+      : `You are an assistant that generates clear and useful PR titles.`;
 
-  const toneDescription = tone ? ` with a ${tone} tone` : '';
-  const branchInfo = currentBranch ? `Branch: ${currentBranch}` : '';
+    const toneDescription = tone ? ` with a ${tone} tone` : '';
+    const branchInfo = currentBranch
+      ? `Branch: ${currentBranch}`
+      : '';
 
-  const userPrompt = `
+    const userPrompt = `
 Here is a git diff. Generate a PR title (one line) based on the changes.
 Only return the title, nothing else.
 ${enforceSemanticPrTitles ? 'It MUST follow the Conventional Commits format.' : ''}
@@ -96,19 +99,24 @@ ${diff}
 ${branchInfo}
 `;
 
-  const res = await openai.chat.completions.create({
-    model,
-    messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: userPrompt },
-    ],
-    temperature: 0.2,
-  });
+    const res = await openai.chat.completions.create({
+      model,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+      temperature: 0.2,
+    });
 
-  return (
-    res.choices[0].message.content?.trim() ??
-    'chore: update something'
-  );
+    return (
+      res.choices[0].message.content?.trim() ??
+      'chore: update something'
+    );
+  } catch (error) {
+    console.log('Error: ', error);
+  }
+
+  return '';
 }
 
 export async function generatePullRequestDescription(

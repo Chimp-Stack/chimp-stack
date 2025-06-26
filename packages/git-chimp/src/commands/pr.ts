@@ -16,6 +16,7 @@ import {
   logSuccess,
   logWarn,
 } from '@chimp-stack/core';
+import { filterDiff } from '@chimp-stack/core/utils/git';
 
 function askUser(question: string): Promise<string> {
   const rl = readline.createInterface({
@@ -55,7 +56,6 @@ export async function handlePR(
 
   const git = simpleGit();
   const octokit = new Octokit({ auth: githubToken });
-
   try {
     const currentBranch = (await git.branch()).current;
     logInfo(
@@ -63,10 +63,10 @@ export async function handlePR(
     );
     logInfo('🔍 Generating pull request description with AI...');
 
-    const diff = await git.diff(['main', currentBranch]);
+    const rawDiff = await git.diff(['main', currentBranch]);
+    const diff = filterDiff(rawDiff);
     let prTitle = `🚀 ${currentBranch}`;
 
-    // If enforcing and title is not valid, fix it
     if (config.enforceSemanticPrTitles) {
       prTitle = await generatePullRequestTitle(
         diff,
@@ -78,6 +78,7 @@ export async function handlePR(
       const isSemantic = validatePrTitle(prTitle, config, {
         throwOnError: false,
       });
+
       if (!isSemantic) {
         if (!isSemantic) {
           logWarn(
@@ -87,7 +88,9 @@ export async function handlePR(
       }
     } else {
       // if not enforcing, just log a warning if not semantic
-      validatePrTitle(prTitle, config, { throwOnError: false });
+      validatePrTitle(prTitle, config, {
+        throwOnError: false,
+      });
     }
 
     const description = await generatePullRequestDescription(
