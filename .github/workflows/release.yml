@@ -51,7 +51,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npx release-chimp bump --ci
+          npx @chimp-stack/release-chimp bump --ci
 
       - name: Publish to npm
         working-directory: packages/${{ matrix.package }}
