@@ -19,7 +19,7 @@
   },
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "tsup src/cli.ts --dts --format esm --out-dir dist",
+    "build": "tsup src/cli.ts --dts --format esm --out-dir dist --bundle",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
   },
   "keywords": [],
