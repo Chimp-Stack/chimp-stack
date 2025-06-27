@@ -26,5 +26,15 @@ export default defineConfig({
   shims: false,
   splitting: false,
   onSuccess: 'echo ✅ Build complete',
-  external: ['source-map', 'whatwg-url', 'tr46', 'punycode'],
+  external: [
+    'source-map',
+    'whatwg-url',
+    'tr46',
+    'punycode',
+    'stream',
+    'fs',
+    'path',
+    'os',
+    'util',
+  ],
 });
