@@ -2,7 +2,7 @@
 
 > Shared configuration and environment loader for the growing chimp toolchain.
 
-[![npm version](https://img.shields.io/npm/v/chimp-core)](https://www.npmjs.com/package/chimp-core)
+[![npm version](https://img.shields.io/npm/v/@chimp-stack/core)](https://www.npmjs.com/package/@chimp-stack/core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://img.shields.io/github/actions/workflow/status/Chimp-Stack/chimp-stack/release.yml?label=release)](https://github.com/Chimp-Stack/chimp-stack/actions/workflows/release.yml)
 

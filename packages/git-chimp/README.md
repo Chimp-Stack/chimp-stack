@@ -2,7 +2,7 @@
 
 > Because writing commit messages and pull requests sucks. Let the AI do it.
 
-[![npm version](https://img.shields.io/npm/v/git-chimp)](https://www.npmjs.com/package/git-chimp)
+[![npm version](https://img.shields.io/npm/v/@chimp-stack/git-chimp)](https://www.npmjs.com/package/@chimp-stack/git-chimp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://img.shields.io/github/actions/workflow/status/Chimp-Stack/chimp-stack/release.yml?label=release)](https://github.com/Chimp-Stack/chimp-stack/actions/workflows/release.yml)
 
