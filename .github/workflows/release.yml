@@ -66,7 +66,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Sync versions with latest tags
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/sync-package-versions.js
+      # - name: Sync versions with latest tags
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: node scripts/sync-package-versions.js
