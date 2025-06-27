@@ -1,0 +1,28 @@
+{
+  "extends": "semantic-release-monorepo",
+  "tagFormat": "@chimp-stack/release-chimp@${version}",
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer"
+    ],
+    [
+      "@semantic-release/release-notes-generator"
+    ],
+    [
+      "@semantic-release/npm",
+      {
+        "publishArgs": [
+          "--access",
+          "public"
+        ]
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "releaseName": "@chimp-stack/release-chimp v${nextRelease.version}",
+        "message": "chore(release): 🚀 release @chimp-stack/release-chimp@${nextRelease.version} [skip ci]"
+      }
+    ]
+  ]
+}
