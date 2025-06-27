@@ -3,7 +3,7 @@
   "version": "0.4.0",
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "tsup src/cli.ts --dts --format esm --out-dir dist --bundle",
+    "build": "tsup src/cli.ts --dts --format esm --out-dir dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",

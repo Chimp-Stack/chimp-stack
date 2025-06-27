@@ -13,4 +13,5 @@ export default defineConfig({
     __VERSION__: JSON.stringify(pkg.version),
   },
   external: ['eslint', 'source-map', 'tsup'],
+  noExternal: ['@chimp-stack/core'],
 });
