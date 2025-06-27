@@ -26,13 +26,12 @@
   "license": "MIT",
   "description": "",
   "dependencies": {
-    "@chimp-stack/core": "*",
+    "@chimp-stack/core": "^0.4.2",
     "@octokit/rest": "^22.0.0",
     "chalk": "^5.4.1",
     "commander": "^14.0.0",
     "dotenv": "^16.5.0",
     "inquirer": "^12.6.3",
-    "openai": "^4.103.0",
     "simple-git": "^3.27.0"
   },
   "devDependencies": {

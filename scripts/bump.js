@@ -5,11 +5,15 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 
 // 🐒 CLI args
-const [pkgName, bumpType] = process.argv.slice(2);
+const args = process.argv.slice(2);
+const [pkgName, bumpType] = args.filter(
+  (arg) => !arg.startsWith('--')
+);
+const shouldPush = args.includes('--push');
 
 if (!pkgName || !['major', 'minor', 'patch'].includes(bumpType)) {
   console.error(
-    'Usage: node ./scripts/bump.js <package-name> major|minor|patch'
+    'Usage: node ./scripts/bump.js <package-name> major|minor|patch [--push]'
   );
   process.exit(1);
 }
@@ -28,12 +32,18 @@ const currentVersion = pkg.version;
 
 // Bump version
 const semver = currentVersion.split('.').map(Number);
-if (bumpType === 'major') semver[0]++;
-if (bumpType === 'minor') semver[1]++;
-if (bumpType === 'patch') semver[2]++;
-if (bumpType !== 'major') semver[0] = semver[0]; // stay the same
-if (bumpType !== 'minor') semver[1] = semver[1]; // stay the same
-if (bumpType !== 'patch') semver[2] = 0; // reset lower digits
+if (bumpType === 'major') {
+  semver[0]++;
+  semver[1] = 0;
+  semver[2] = 0;
+}
+if (bumpType === 'minor') {
+  semver[1]++;
+  semver[2] = 0;
+}
+if (bumpType === 'patch') {
+  semver[2]++;
+}
 
 const newVersion = semver.join('.');
 pkg.version = newVersion;
@@ -44,12 +54,16 @@ console.log(
   `📦 ${pkg.name} bumped: ${currentVersion} → ${newVersion}`
 );
 
-// Commit and tag
+// Git stuff
 execSync(`git add ${pkgJsonPath}`);
 execSync(`git commit -m "chore(${pkgName}): bump to ${newVersion}"`);
 execSync(`git tag "${pkg.name}@${newVersion}"`);
-execSync(`git push --follow-tags`);
 
-console.log(
-  `✅ Done: committed and tagged ${pkg.name}@${newVersion}`
-);
+if (shouldPush) {
+  execSync(`git push && git push --tags`);
+  console.log(
+    `🚀 Pushed commit and tag for ${pkg.name}@${newVersion}`
+  );
+} else {
+  console.log(`🛑 Skipped git push — run it manually when ready.`);
+}
