@@ -89,6 +89,7 @@
     "@inquirer/prompts": "^7.5.3",
     "chalk": "^5.4.1",
     "commander": "^14.0.0",
-    "inquirer": "^12.6.3"
+    "inquirer": "^12.6.3",
+    "openai": "^4.103.0"
   }
 }
