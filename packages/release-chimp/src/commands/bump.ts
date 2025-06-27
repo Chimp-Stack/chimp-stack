@@ -31,6 +31,7 @@ export async function handleBump(
     cwd?: string;
   }
 ) {
+  // Change directory if needed
   if (cliOptions.cwd) {
     try {
       process.chdir(cliOptions.cwd);
@@ -45,11 +46,14 @@ export async function handleBump(
       process.exit(1);
     }
   }
+
   const config = loadChimpConfig(
     'releaseChimp'
   ) as ReleaseChimpConfig;
-
   const dryRun = cliOptions.dryRun ?? config.dryRun ?? false;
+  const isCI = cliOptions.ci ?? false;
+
+  // Determine bump part
   let part = cliPart || config.bumpType || null;
   let inferredFromCommits = false;
 
@@ -59,8 +63,15 @@ export async function handleBump(
       console.log(`📦 Bump type auto-detected as: ${part}`);
       inferredFromCommits = true;
     } else {
-      console.log('📦 Falling back to patch version bump');
-      part = 'patch';
+      if (isCI) {
+        console.log(
+          '⚠️  No semantic commits found. CI mode: skipping bump.'
+        );
+        process.exit(0); // Graceful exit — no bump needed
+      } else {
+        console.log('📦 Falling back to patch version bump');
+        part = 'patch';
+      }
     }
   }
 
@@ -73,7 +84,6 @@ export async function handleBump(
   }
 
   const inferVersionOnly = cliPart === undefined && !dryRun;
-  const isCI = cliOptions.ci ?? false;
 
   if (isCI) {
     console.log(
@@ -106,10 +116,10 @@ export async function handleBump(
   }
 
   if (next === rawVersion) {
-    console.error(
-      `❌ Version '${next}' is already published. Skipping.`
+    console.log(
+      `⚠️  Version '${next}' is already published or no bump needed. Exiting.`
     );
-    process.exit(0); // or 1 if you want CI to fail
+    process.exit(0);
   }
 
   if (inferVersionOnly) {
@@ -118,23 +128,25 @@ export async function handleBump(
     );
   }
 
+  // Load package.json data
   const pkgPath = path.resolve(process.cwd(), 'package.json');
   const hasPkg = fs.existsSync(pkgPath);
   const pkg = hasPkg
     ? JSON.parse(fs.readFileSync(pkgPath, 'utf-8'))
     : {};
-
   const name = pkg.name;
+
+  // Determine tag name
   const tag =
     config?.tagFormat && name
       ? applyTagFormat(config.tagFormat, name, next)
       : `v${next}`;
-
   const includeNameInCommit = config.includeNameInCommit ?? true;
   const commitMessage = isCI
     ? `chore(release): ${includeNameInCommit && name ? `${name} ` : ''}${next} [skip ci]`
     : `chore(release): ${includeNameInCommit && name ? `${name} ` : ''}${next}`;
 
+  // Generate changelog or skip
   const changelog = noChangelog
     ? '_Changelog generation skipped._'
     : await generateSemanticChangelog({
@@ -146,12 +158,9 @@ export async function handleBump(
 
   if (dryRun) {
     console.log('\n🔍 [Dry Run] Preview:\n');
-
-    if (!noPackageJson) {
+    if (!noPackageJson)
       console.log(`📦 Would update package.json version to ${next}`);
-    } else {
-      console.log('📦 Skipping package.json update');
-    }
+    else console.log('📦 Skipping package.json update');
 
     if (!noChangelog) {
       console.log(
@@ -165,15 +174,14 @@ export async function handleBump(
 
     if (!noGit) {
       console.log(`🔧 Would stage:`);
-      if (!noPackageJson) console.log(`  - package.json`);
+      if (!noPackageJson) console.log('  - package.json');
       if (!noChangelog)
         console.log(
           `  - ${config.changelog?.path ?? 'CHANGELOG.md'}`
         );
-
       console.log(`🔧 Would commit with message: "${commitMessage}"`);
       console.log(`🏷️  Would tag: ${tag}`);
-      console.log(`🚀 Would push to remote`);
+      console.log('🚀 Would push to remote');
     } else {
       console.log('🔧 Skipping git commit/tag/push');
     }
@@ -184,7 +192,7 @@ export async function handleBump(
     return;
   }
 
-  // Update package.json version
+  // Actual bump and release
   if (!noPackageJson) {
     if (!hasPkg) {
       console.warn(
@@ -203,20 +211,18 @@ export async function handleBump(
     console.log('📦 Skipping package.json update');
   }
 
-  // Generate
   if (!noChangelog) {
     try {
       writeChangelogToFile(changelog, config.changelog?.path);
       console.log('📝 Changelog updated');
-    } catch (error) {
-      console.error(`❌ Failed to write changelog`);
+    } catch {
+      console.error('❌ Failed to write changelog');
       process.exit(1);
     }
   } else {
     console.log('📝 Skipping changelog update');
   }
 
-  // Commit, tag, and push unless opted out
   if (!noGit) {
     gitCommitTagPush(next, {
       tagFormat: config.tagFormat,

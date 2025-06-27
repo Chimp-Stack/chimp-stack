@@ -18,7 +18,6 @@ export function gitCommitTagPush(
       fs.readFileSync(path.join(cwd, 'package.json'), 'utf-8')
     );
     const name = packageJson.name ?? '';
-
     const tag =
       options?.tagFormat && name
         ? applyTagFormat(options.tagFormat, name, version)

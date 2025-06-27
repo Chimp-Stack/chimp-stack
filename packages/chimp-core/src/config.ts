@@ -5,22 +5,44 @@ import { ChimpConfig } from './types/config';
 
 const CONFIG_FILENAME = '.chimprc';
 
+function findConfigFile(
+  startDir: string,
+  filename = CONFIG_FILENAME
+): string | null {
+  let dir = startDir;
+
+  while (true) {
+    const candidate = path.join(dir, filename);
+    if (fs.existsSync(candidate)) return candidate;
+
+    const parentDir = path.dirname(dir);
+    if (parentDir === dir) break; // reached filesystem root
+
+    dir = parentDir;
+  }
+
+  return null;
+}
+
 export function loadChimpConfig(scope?: string): ChimpConfig {
+  // 1. Find local config searching upward from cwd
+  const localConfigPath = findConfigFile(process.cwd());
+
+  // 2. Always load home config
   const globalPath = path.join(os.homedir(), CONFIG_FILENAME);
-  const localPath = path.join(process.cwd(), CONFIG_FILENAME);
 
   const globalConfig = fs.existsSync(globalPath)
     ? JSON.parse(fs.readFileSync(globalPath, 'utf-8'))
     : {};
 
-  const localConfig = fs.existsSync(localPath)
-    ? JSON.parse(fs.readFileSync(localPath, 'utf-8'))
-    : {};
+  const localConfig =
+    localConfigPath && fs.existsSync(localConfigPath)
+      ? JSON.parse(fs.readFileSync(localConfigPath, 'utf-8'))
+      : {};
 
   if (scope) {
     const { [scope]: globalScoped = {}, ...globalTopLevel } =
       globalConfig;
-
     const { [scope]: localScoped = {}, ...localTopLevel } =
       localConfig;
 
