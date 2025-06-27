@@ -32,14 +32,6 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org/'
 
-      - name: Configure npm auth and registry for scope
-        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Test npm auth
-        run: npm whoami || echo "🔒 Auth failed — token is likely invalid or not scoped correctly"
-
       - name: Install dependencies
         run: npm ci
 
