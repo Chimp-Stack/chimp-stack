@@ -39,10 +39,9 @@ jobs:
         run: npx turbo run build --filter=${{ matrix.package }} --concurrency=1
 
       - name: Publish package if new
-        working-directory: packages/${{ matrix.package }}
         run: |
-          PACKAGE_NAME=$(node -p "require('./package.json').name")
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          PACKAGE_NAME=$(node -p "require('./packages/${{ matrix.package }}/package.json').name")
+          CURRENT_VERSION=$(node -p "require('./packages/${{ matrix.package }}/package.json').version")
           PUBLISHED_VERSION=$(npm view $PACKAGE_NAME version || echo "0.0.0")
 
           echo "📦 Package: $PACKAGE_NAME"
@@ -55,7 +54,7 @@ jobs:
           fi
 
           echo "🚀 Publishing $PACKAGE_NAME@$CURRENT_VERSION..."
-          npm publish --access public
+          npm publish --workspace $PACKAGE_NAME --access public
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
