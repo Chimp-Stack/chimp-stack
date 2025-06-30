@@ -53,7 +53,7 @@ jobs:
             exit 0
           fi
 
-          npm pack --workspace @chimp-stack/core
+          npm pack --workspace $PACKAGE_NAME
           tar -tf *.tgz
 
           # echo "🚀 Publishing $PACKAGE_NAME@$CURRENT_VERSION..."
