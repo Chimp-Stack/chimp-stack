@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         package:
-          - chimp-core
+          - core
           - git-chimp
           - doc-chimp
           - release-chimp
