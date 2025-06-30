@@ -25,8 +25,8 @@
     // Otherwise use for local tooling like you're doing
     "baseUrl": ".",
     "paths": {
-      "@chimp-stack/core": ["packages/chimp-core/src/index.ts"],
-      "@chimp-stack/core/*": ["packages/chimp-core/src/*"]
+      "@chimp-stack/core": ["packages/core/src/index.ts"],
+      "@chimp-stack/core/*": ["packages/core/src/*"]
     }
   }
 }

@@ -1,4 +1,4 @@
-# 🧠 chimp-core
+# 🧠 @chimp-stack/core
 
 > Shared configuration and environment loader for the growing chimp toolchain.
 
@@ -21,7 +21,7 @@ npm install @chimp-stack/core
 Or in a monorepo:
 
 ```bash
-npm install --workspace=@chimp-stack/chimp-core
+npm install --workspace=@chimp-stack/core
 ```
 
 ---
@@ -31,7 +31,7 @@ npm install --workspace=@chimp-stack/chimp-core
 In your tool package (e.g., `git-chimp`, `review-chimp`), import and use the helpers:
 
 ```ts
-import { loadChimpConfig, getEnv } from 'chimp-core';
+import { loadChimpConfig, getEnv } from '@chimp-stack/core';
 
 const config = loadChimpConfig('gitChimp');
 const env = getEnv();
@@ -98,12 +98,12 @@ If used inside a Turborepo or other monorepo setup, make sure its `package.json`
 
 ## 🐒 Part of the Chimp Stack™
 
-* [`git-chimp`](https://www.npmjs.com/package/git-chimp) – commit & PR generator  
-  [source](https://github.com/MarkRabey/chimp-stack/tree/main/packages/git-chimp)
-* [`doc-chimp`](https://www.npmjs.com/package/doc-chimp) – auto-documentation from commits and code (WIP)  
-  [source](https://github.com/MarkRabey/chimp-stack/tree/main/packages/doc-chimp)
+* [`git-chimp`](https://www.npmjs.com/package/@chimp-stack/git-chimp) – commit & PR generator  
+  [source](https://github.com/Chimp-Stack/chimp-stack/tree/main/packages/git-chimp)
+* [`doc-chimp`](https://www.npmjs.com/package/@chimp-stack/doc-chimp) – auto-documentation from commits and code
+  [source](https://github.com/Chimp-Stack/chimp-stack/tree/main/packages/doc-chimp)
 * `review-chimp` – coming soon: let the monkey do your code reviews
-* `chimp-core` – this package  
-  [source](https://github.com/MarkRabey/chimp-stack/tree/main/packages/chimp-core)
+* `core` – this package  
+  [source](https://github.com/Chimp-Stack/chimp-stack/tree/main/packages/core)
 
 > *“Because even the best engineers deserve a monkey on their shoulder.”*

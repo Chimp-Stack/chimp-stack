@@ -4,7 +4,7 @@
 
 Welcome to the **chimp-stack**, the monorepo that houses the growing family of tools designed to make your development workflow smoother, sassier, and suspiciously simian.
 
-This monorepo is built using **Turborepo** and managed via **npm** workspaces. Each tool can be developed, built, and released independently—but shares common logic via `chimp-core`.
+This monorepo is built using **Turborepo** and managed via **npm** workspaces. Each tool can be developed, built, and released independently—but shares common logic via `@chimp-stack/core`.
 
 ---
 
@@ -20,7 +20,7 @@ This monorepo is built using **Turborepo** and managed via **npm** workspaces. E
 ### Package Releases
 - [`git-chimp`](https://github.com/Chimp-Stack/chimp-stack/releases?q=git-chimp)
 - [`doc-chimp`](https://github.com/Chimp-Stack/chimp-stack/releases?q=doc-chimp)
-- [`chimp-core`](https://github.com/Chimp-Stack/chimp-stack/releases?q=chimp-core)
+- [`core`](https://github.com/Chimp-Stack/chimp-stack/releases?q=core)
 
 ---
 
@@ -91,7 +91,7 @@ See individual package `.releaserc` files for configuration.
 ```sh
 chimp-stack/
 ├── packages/
-│   ├── chimp-core/       # shared logic
+│   ├── core/       # shared logic
 │   ├── git-chimp/        # git commit / PR helper
 │   ├── doc-chimp/        # doc generator
 │   └── review-chimp/     # (planned)
