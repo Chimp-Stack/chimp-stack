@@ -3,9 +3,9 @@
   "version": "0.2.3",
   "type": "module",
   "bin": {
-    "doc-chimp": "./dist/cli.js"
+    "doc-chimp": "./dist/cli.mjs"
   },
-  "main": "./dist/cli.js",
+  "main": "./dist/cli.mjs",
   "files": [
     "dist"
   ],
