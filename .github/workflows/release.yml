@@ -2,8 +2,6 @@ name: Release Monorepo Packages
 
 on:
   push:
-    branches:
-      - main
     tags:
       - '@chimp-stack/*@*' # Triggers only on scoped version tags
 
