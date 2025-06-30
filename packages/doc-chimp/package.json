@@ -28,7 +28,7 @@
   "dependencies": {
     "@types/node": "^22.15.29",
     "chalk": "^5.4.1",
-    "@chimp-stack/core": "*",
+    "@chimp-stack/core": "^0.4.6",
     "commander": "^14.0.0",
     "comment-parser": "^1.4.1",
     "fast-glob": "^3.3.3",

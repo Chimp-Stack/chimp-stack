@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { execSync } from 'node:child_process';
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
 
 // 🐒 CLI args
 const args = process.argv.slice(2);

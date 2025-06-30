@@ -9,7 +9,9 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "bump": "node ./scripts/bump.js",
+    "release": "node ./scripts/release-all.js"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
