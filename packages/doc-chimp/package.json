@@ -1,6 +1,6 @@
 {
   "name": "@chimp-stack/doc-chimp",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "type": "module",
   "bin": {
     "doc-chimp": "./dist/cli.js"
