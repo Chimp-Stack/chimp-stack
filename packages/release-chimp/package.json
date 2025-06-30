@@ -3,9 +3,9 @@
   "version": "0.3.4",
   "type": "module",
   "bin": {
-    "release-chimp": "./dist/cli.js"
+    "release-chimp": "./dist/cli.mjs"
   },
-  "main": "./dist/cli.js",
+  "main": "./dist/cli.mjs",
   "files": [
     "dist"
   ],

@@ -10,8 +10,7 @@
     "outDir": "dist",
     "declaration": true,
     "sourceMap": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true
+    "resolveJsonModule": true
   },
   "include": ["src", "tests"]
 }

@@ -19,12 +19,16 @@ const releaseOrder = JSON.parse(
 
 for (const pkg of releaseOrder) {
   console.log(`\n🔧 Bumping ${pkg} (${bumpType})...`);
-  execSync(
-    `node ./scripts/bump.js ${pkg} ${bumpType}${shouldPush ? ' --push' : ''}`,
-    {
-      stdio: 'inherit',
-    }
-  );
+  execSync(`node ./scripts/bump.js ${pkg} ${bumpType}`, {
+    stdio: 'inherit',
+  });
+}
+
+if (shouldPush) {
+  console.log('\n🚀 Pushing all commits and tags...');
+  execSync('git push && git push --tags', { stdio: 'inherit' });
+} else {
+  console.log('\n🛑 Skipping git push — run it manually when ready.');
 }
 
 console.log(
